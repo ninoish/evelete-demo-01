@@ -1,0 +1,50 @@
+import type { RecordMaster } from "@prisma/client";
+import { ReactFormExtendedApi } from "@tanstack/react-form";
+import { convertUnitValueToUnitDisplay } from "~/utils/unitConverter";
+
+type CriteriaField = ReactFormExtendedApi<
+  {
+    recordValue: number;
+  },
+  any,
+  any,
+  any,
+  any,
+  any,
+  any,
+  any,
+  any,
+  any
+>;
+
+export function RecordCriteriaHeightFields({
+  form,
+  recordMaster,
+}: {
+  form: CriteriaField;
+  recordMaster: RecordMaster;
+}) {
+  return (
+    <div className="flex items-end gap-1">
+      <form.Field name="recordValue">
+        {(field) => (
+          <input
+            type="number"
+            placeholder="記録の値"
+            name={field.name}
+            value={field.state.value || ""}
+            onBlur={field.handleBlur}
+            onChange={(e) => field.handleChange(Number(e.target.value))}
+            step={0.01}
+            min={recordMaster.minValue ?? undefined}
+            max={recordMaster.maxValue ?? undefined}
+            className="py-1 px-2"
+          />
+        )}
+      </form.Field>
+      <span>
+        {convertUnitValueToUnitDisplay(null, null, recordMaster.unitValue)}
+      </span>
+    </div>
+  );
+}

@@ -1,0 +1,57 @@
+id,name,name-ja,criteria,isAccumulative,isTeamRecord,canbeFocusIndex,isNotCompetitive,unitValue,hasSportCompetition,minValue,maxValue,emoji,standardValue,standardValueMargin,unitValueSteps
+long-throw-baseball,long-throw-baseball,野球ボール遠投,Distance,FALSE,FALSE,TRUE,FALSE,meter,FALSE,1,200,⚾️,40,10,0.01
+long-throw-softball,long-throw-softball,ソフトボール遠投,Distance,FALSE,FALSE,TRUE,FALSE,meter,FALSE,1,200,🥎,30,10,0.01
+long-throw-handball,long-throw-handball,ハンドボール遠投,Distance,FALSE,FALSE,TRUE,FALSE,meter,FALSE,1,200,🤾,30,10,0.01
+long-sitting-and-bending-forward,Long sitting and bending forward,長座前屈,Distance,FALSE,FALSE,TRUE,FALSE,centimeter,FALSE,1,150,🙆,20,20,0.01
+standing-vertical-jump,standing vertical jump,垂直跳び (助走なし),Height,FALSE,FALSE,TRUE,FALSE,centimeter,FALSE,1,200,🪽,40,10,0.1
+running-vertical-jump,running vertical jump,垂直跳び (助走あり),Height,FALSE,FALSE,TRUE,FALSE,centimeter,FALSE,1,200,🪽,40,10,0.1
+standing-long-jump,Standing long jump,立ち幅跳び,Distance,FALSE,FALSE,TRUE,FALSE,meter,FALSE,1,10,🪽,3.5,0.5,0.01
+long-jump,Long jump,走り幅跳び,Distance,FALSE,FALSE,TRUE,FALSE,meter,TRUE,1,15,🪽,3.5,0.5,0.01
+standing-vertical-jump-reach,Standing vertical jump reach,最高到達点 (助走なし),Height,FALSE,FALSE,TRUE,FALSE,centimeter,FALSE,100,500,🪽,260,10,1
+running-vertical-jump-reach,Running vertical jump reach,最高到達点 (助走あり),Height,FALSE,FALSE,TRUE,FALSE,centimeter,FALSE,100,500,🪽,280,10,1
+baseball-pitching-speed,Baseball pitching speed,硬式野球投球スピード,Speed,FALSE,FALSE,TRUE,FALSE,kmPerHour,FALSE,10,250,⚾️,100,10,0.01
+volleyball-serve-speed,Volleyball serve speed,バレーボールサーブスピード,Speed,FALSE,FALSE,TRUE,FALSE,kmPerHour,FALSE,10,200,🏐,60,10,0.01
+tennis-serve-speed,Tennis serve speed,テニスサーブスピード,Speed,FALSE,FALSE,TRUE,FALSE,kmPerHour,FALSE,10,300,🎾,100,10,0.01
+squats,Squats,スクワット,"Weight, CountMoreIsBetter",TRUE,FALSE,TRUE,FALSE,kgAndCount,TRUE,,,🏋️,,,
+bench-press,bench press,ベンチプレス,"Weight, CountMoreIsBetter",TRUE,FALSE,TRUE,FALSE,kgAndCount,TRUE,,,🏋️,,,
+squat-1rm,Squat 1RM,スクワット 1RM,Weight,FALSE,FALSE,FALSE,FALSE,kilogram,FALSE,0,1000,🏋️,60,10,0.1
+bench-press-1rm,Bench Press 1RM,ベンチプレス 1RM,Weight,FALSE,FALSE,FALSE,FALSE,kilogram,FALSE,0,1000,🏋️,60,10,0.1
+squat-10rm,Squat 10RM,スクワット 10RM,Weight,FALSE,FALSE,FALSE,FALSE,kilogram,FALSE,0,1000,🏋️,60,10,0.1
+bench-press-10rm,Bench press 10RM,ベンチプレス 10RM,Weight,FALSE,FALSE,FALSE,FALSE,kilogram,FALSE,0,1000,🏋️,60,10,0.1
+horizontal-bar-hanging-time,Horizontal bar hanging time,鉄棒ぶら下がり秒数,TimeLongerIsBetter,TRUE,FALSE,TRUE,FALSE,time,FALSE,1,,🤸,20,5,0.01
+100m-dash,100m dash,100m走,TimeShorterIsBetter,FALSE,FALSE,TRUE,FALSE,millisecond,TRUE,8,,🏃‍♀️,15,0.5,0.1
+golf-18h-score,Golf 18-Hour Score,ゴルフ18Hスコア,CountLessIsBetter,FALSE,FALSE,TRUE,FALSE,none,TRUE,18,1000,⛳️,110,10,1
+golf-9h-score,Golf 9-Hour Score,ゴルフ9Hスコア,CountLessIsBetter,FALSE,FALSE,TRUE,FALSE,none,FALSE,9,500,⛳️,55,5,1
+high-diving,High diving,高飛び込み,PointScore,FALSE,FALSE,TRUE,FALSE,point,TRUE,,,🏊,,,
+number-of-push-ups,Number of push-ups,腕立て伏せ 回数,CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,times,FALSE,1,,💪,20,5,1
+number-of-push-ups-in-1-minute,Number of push-ups in 1 minute,1分間 腕立て伏せ回数,CountMoreIsBetter,FALSE,FALSE,FALSE,FALSE,times,FALSE,1,,💪,20,5,1
+abdominal-exercises,Abdominal exercises,腹筋 回数,CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,times,FALSE,1,,💪,20,5,1
+number-of-sit-ups-in-1-minute,Number of sit-ups in 1 minute,1分間 腹筋回数,CountMoreIsBetter,FALSE,FALSE,FALSE,FALSE,times,FALSE,1,,💪,20,5,1
+number-of-pull-ups,Number of pull-ups,懸垂 回数,CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,times,FALSE,1,,💪,20,5,1
+number-of-pull-ups-in-30-sec,Number of pull-ups in 30 sec,30秒間 懸垂回数,CountMoreIsBetter,FALSE,FALSE,FALSE,FALSE,times,FALSE,1,,💪,20,5,1
+eyes‑closed-single‑leg-stance-duration,Eyes‑Closed Single‑Leg Stance Duration,目瞑り片足立ち 秒数,TimeLongerIsBetter,FALSE,FALSE,TRUE,FALSE,time,FALSE,0,,🙈,20,5,1
+shuttle-run,Shuttle Run,シャトルラン,CountMoreIsBetter,FALSE,FALSE,TRUE,FALSE,times,FALSE,,,🏃‍♀️,,,
+repeated-side-jumps,Repeated side jumps,反復横跳び,CountMoreIsBetter,FALSE,FALSE,TRUE,FALSE,times,FALSE,,,🏃‍♀️,,,1
+golf-practice-shots,Golf practice shots,ゴルフ 練習打球数,CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,balls,FALSE,1,,🏌️‍♀️,50,20,1
+golf-practice-swings,Golf practice swings,ゴルフ 素振り数,CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,times,FALSE,1,,🏌️‍♀️,20,10,1
+number-of-basketball-shot-attempts,Number of basketball shot attempts,バスケシュート試投数,CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,shots,FALSE,1,,🏀,50,20,1
+number-of-successful-basketball-shots,Number of successful basketball shots,バスケシュート成功数,CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,shots,FALSE,0,,🏀,50,20,1
+basketball-free-throw-success-rate,Basketball free throw success rate,バスケフリースロー成功数,CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,shots,FALSE,0,,🏀,10,5,1
+number-of-baseball-bat-swings,Number of Baseball Bat Swings,野球バット素振り 回数,CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,times,FALSE,1,,⚾️,30,20,1
+number-of-football-juggles,Number of Football Juggles,サッカーボールリフティング 回数,CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,times,FALSE,1,,⚽️,20,10,1
+cmj,CMJ,カウンタームーブメントジャンプ,Height,FALSE,FALSE,TRUE,FALSE,centimeter,FALSE,,,🪽,,,
+rsi-reactive-strength-index,RSI Reactive Strength Index,RSI Reactive Strength Index,Index,FALSE,FALSE,TRUE,FALSE,none,FALSE,,,🪽,,,
+rsi-modified,RSI modified,RSI modified,Index,FALSE,FALSE,TRUE,FALSE,none,FALSE,,,🪽,,,
+body-weight,body weight,体重,Weight,FALSE,FALSE,TRUE,TRUE,kilogram,FALSE,,,⚖️,,,
+body-fat-percentage,body fat percentage,体脂肪率,Percentage,FALSE,FALSE,TRUE,TRUE,percent,FALSE,,,⚖️,,,
+25m-freestyle-swimming,25m freestyle swimming,競泳自由形25m,TimeShorterIsBetter,FALSE,FALSE,TRUE,FALSE,millisecond,TRUE,5,,🏊,,,0.01
+50m-freestyle-swimming,50m freestyle swimming,競泳自由形50m,TimeShorterIsBetter,FALSE,FALSE,TRUE,FALSE,millisecond,TRUE,10,,🏊,,,0.01
+100m-freestyle-swimming,100m freestyle swimming,競泳自由形100m,TimeShorterIsBetter,FALSE,FALSE,TRUE,FALSE,millisecond,TRUE,20,,🏊,,,0.01
+freestyle-swimming,Freestyle swimming,競泳自由形,Distance,TRUE,FALSE,TRUE,FALSE,meter,FALSE,,,🏊,,,
+5km-run,5km run,ランニング5km,TimeShorterIsBetter,FALSE,FALSE,FALSE,FALSE,time,FALSE,,,🏃‍♀️,,,
+10km-run,10km run,ランニング10km,TimeShorterIsBetter,FALSE,FALSE,FALSE,FALSE,time,FALSE,,,🏃‍♀️,,,
+running,running,ランニング,"Distance, Time",TRUE,FALSE,FALSE,FALSE,kilometer,FALSE,,,🏃‍♀️,,,
+track-and-field-100m-x-4-relay-race,Track and field 100m x 4 relay race,陸上100m x 4 リレー走,TimeShorterIsBetter,FALSE,TRUE,FALSE,FALSE,millisecond,TRUE,,,🏃‍♀️,,,
+golf-club-head-speed,Golf club head speed,ゴルフクラブヘッドスピード,Speed,FALSE,FALSE,TRUE,FALSE,kmPerHour,FALSE,1,300,🏌️‍♀️,,,0.1
+golf-ball-speed,Golf Ball Speed,ゴルフボールスピード,Speed,FALSE,FALSE,TRUE,FALSE,kmPerHour,FALSE,1,500,🏌️‍♀️,,,0.1
+golf-ball-distance,Golf ball distance,ゴルフボール飛距離,Distance,FALSE,FALSE,TRUE,FALSE,meter,TRUE,1,1000,🏌️‍♀️,,,0.01

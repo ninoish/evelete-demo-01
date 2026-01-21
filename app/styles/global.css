@@ -1,0 +1,224 @@
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap");
+
+
+:root {
+  --color-foreground: hsl(0, 0%, 8%);
+  --color-background: rgb(250, 250, 250);
+  --color-links: hsl(0, 0%, 0%);
+  --color-links-hover: hsla(0, 0%, 0%, 0.25);
+  --color-border: hsl(202, 85%, 38%);
+  --color-invalid: hsl(356, 100%, 71%);
+  --gradient-background: radial-gradient(
+    circle,
+    rgb(11, 155, 238) 0%,
+    rgb(15, 117, 181) 35%,
+    rgb(13, 39, 85) 100%
+  );
+  --font-body: -apple-system, "Segoe UI", Helvetica Neue, Helvetica, Roboto,
+    Arial, sans-serif, system-ui, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+html {
+  box-sizing: border-box;
+}
+
+html.lock-x-overscroll,
+body.lock-x-overscroll {
+  overscroll-behavior-x: none !important;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+:-moz-focusring {
+  outline: auto;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  color: var(--color-foreground);
+  background-color: var(--color-background);
+}
+
+[data-light] {
+  --color-invalid: hsl(356, 70%, 39%);
+  color: var(--color-background);
+  background-color: var(--color-foreground);
+}
+
+body {
+  font-family: var(--font-body);
+  line-height: 1.5;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  min-height: calc(100vh - env(safe-area-inset-bottom));
+}
+
+a {
+  text-decoration: none;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  background-color: var(--color-border);
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+[type="text"],
+[type="password"],
+[type="date"],
+[type="datetime"],
+[type="datetime-local"],
+[type="month"],
+[type="week"],
+[type="email"],
+[type="number"],
+[type="search"],
+[type="tel"],
+[type="time"],
+[type="url"],
+textarea,
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: block;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background-blend-mode: luminosity;
+  box-shadow: none;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: normal;
+  line-height: 1.5;
+  color: var(--color-foreground);
+  transition: box-shadow 200ms, border-color 50ms ease-out, background-color
+    50ms ease-out, color 50ms ease-out;
+}
+
+[type="color"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  width: 2rem;
+  border: none;
+  border-radius: 0.25rem;
+  margin: 0;
+  padding: 0;
+  box-shadow: none;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: normal;
+  line-height: 1.5;
+  color: var(--color-foreground);
+  transition: box-shadow 200ms, border-color 50ms ease-out, background-color
+    50ms ease-out, color 50ms ease-out;
+}
+
+[data-light] [type="text"],
+[data-light] [type="password"],
+[data-light] [type="date"],
+[data-light] [type="datetime"],
+[data-light] [type="datetime-local"],
+[data-light] [type="month"],
+[data-light] [type="week"],
+[data-light] [type="email"],
+[data-light] [type="number"],
+[data-light] [type="search"],
+[data-light] [type="tel"],
+[data-light] [type="time"],
+[data-light] [type="url"],
+[data-light] [type="color"],
+[data-light] textarea {
+  background-color: hsl(0 0% 0% / 10%);
+}
+
+[type="text"][aria-invalid="true"],
+[type="password"][aria-invalid="true"],
+[type="date"][aria-invalid="true"],
+[type="datetime"][aria-invalid="true"],
+[type="datetime-local"][aria-invalid="true"],
+[type="month"][aria-invalid="true"],
+[type="week"][aria-invalid="true"],
+[type="email"][aria-invalid="true"],
+[type="number"][aria-invalid="true"],
+[type="search"][aria-invalid="true"],
+[type="tel"][aria-invalid="true"],
+[type="time"][aria-invalid="true"],
+[type="url"][aria-invalid="true"],
+[type="color"][aria-invalid="true"],
+textarea[aria-invalid="true"] {
+  border-color: var(--color-invalid);
+}
+
+textarea {
+  display: block;
+  min-height: 50px;
+  max-width: 100%;
+}
+
+textarea[rows] {
+  height: auto;
+}
+
+input:disabled,
+input[readonly],
+textarea:disabled,
+textarea[readonly] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+[type="file"],
+[type="color"],
+[type="checkbox"],
+[type="radio"] {
+  margin: 0;
+}
+
+[type="file"] {
+  width: 100%;
+}
+
+.form-validation-error {
+  margin: 0;
+  color: var(--color-invalid);
+  font-size: 0.8rem;
+}
+
+.error-container {
+  padding: 0.5rem 1rem;
+  height: 100vh;
+}
+
+.evelete-logo {
+  font-family: "Caveat", cursive;
+  font-optical-sizing: auto;
+  font-weight: normal;
+  font-style: normal;
+}

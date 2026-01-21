@@ -1,0 +1,56 @@
+id,slug,name,name-ja,criteria,isAccumulative,isTeamRecord,canbeFocusIndex,isNotCompetitive,unitValue,hasSportCompetition,minValue,maxValue,emoji,standardValue,standardValueMargin,unitValueSteps
+d4587c12-ab47-4b64-bfe1-241219445ea1,long-throw-baseball,long-throw-baseball,野球ボール遠投,Distance,FALSE,FALSE,TRUE,FALSE,meter,FALSE,1,200,⚾️,40,10,0.01
+bf06d14a-a77d-48e3-8518-7b0aeb961230,long-throw-softball,long-throw-softball,ソフトボール遠投,Distance,FALSE,FALSE,TRUE,FALSE,meter,FALSE,1,200,🥎,30,10,0.01
+2f12d7f7-8c55-43cd-aa30-8376b13ef79e,long-throw-handball,long-throw-handball,ハンドボール遠投,Distance,FALSE,FALSE,TRUE,FALSE,meter,FALSE,1,200,🤾,30,10,0.01
+23fb2b86-23a8-455c-ab8e-990e0564cadc,long-sitting-and-bending-forward,Long sitting and bending forward,長座前屈,Distance,FALSE,FALSE,TRUE,FALSE,centimeter,FALSE,1,150,🙆,20,30,0.01
+eac05cec-e66e-43f8-972a-62a9001e671b,standing-vertical-jump,standing vertical jump,垂直跳び,Height,FALSE,FALSE,TRUE,FALSE,centimeter,FALSE,1,200,🪽,40,30,0.1
+e0034d40-0759-471f-8472-0bc468d6e0ab,running-vertical-jump,running vertical jump,助走付き垂直跳び,Height,FALSE,FALSE,TRUE,FALSE,centimeter,FALSE,1,200,🪽,40,20,0.1
+23e186ec-0fe3-4ea4-8d2c-84b12a48fc57,standing-long-jump,Standing long jump,立ち幅跳び,Distance,FALSE,FALSE,TRUE,FALSE,meter,FALSE,1,10,🪽,200,50,0.01
+193432e8-c1d9-40ce-adfe-5b77cd97d70f,long-jump,Long Jump,走り幅跳び,Distance,FALSE,FALSE,TRUE,FALSE,meter,TRUE,1,15,🪽,300,100,0.01
+335272e9-9392-4da8-93bc-eb61987ed4d8,standing-vertical-jump-reach,Standing vertical jump reach,垂直跳び最高到達点,Height,FALSE,FALSE,TRUE,FALSE,centimeter,FALSE,100,500,🪽,260,30,1
+07a1bccf-3f55-4d94-bf0d-59c539ac2762,running-vertical-jump-reach,Running vertical jump reach,助走付き垂直跳び最高到達点,Height,FALSE,FALSE,TRUE,FALSE,centimeter,FALSE,100,500,🪽,280,30,1
+23f11faf-101f-4c64-935c-e0f5a9f9411b,baseball-pitching-speed,Baseball pitching speed,硬式野球投球スピード,Speed,FALSE,FALSE,TRUE,FALSE,kmPerHour,FALSE,10,250,⚾️,100,30,0.01
+48d43c26-dd12-4738-9d67-652fc323b00d,volleyball-serve-speed,Volleyball serve speed,バレーボールサーブスピード,Speed,FALSE,FALSE,TRUE,FALSE,kmPerHour,FALSE,10,200,🏐,60,30,0.01
+6c766fef-e28f-4f02-bd84-635900195be7,tennis-serve-speed,Tennis serve speed,テニスサーブスピード,Speed,FALSE,FALSE,TRUE,FALSE,kmPerHour,FALSE,10,300,🎾,100,30,0.01
+51b07a32-67f0-4317-a27b-4a27f6ed3458,squats,Squats,スクワット,Weight|CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,kgAndCount,TRUE,,,🏋️,,,
+7f3c58b4-a808-4b01-9b2d-64a78ea92748,bench-press,Bench Press,ベンチプレス,Weight|CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,kgAndCount,TRUE,,,🏋️,,,
+e2b247e3-d274-48c6-884a-1b6dafd5d5f8,squat-1rm,Squat 1RM,スクワット 1RM,Weight,FALSE,FALSE,FALSE,FALSE,kilogram,FALSE,0,1000,🏋️,60,30,0.1
+0c839a25-ead0-4bac-af71-80c60f14b947,bench-press-1rm,Bench Press 1RM,ベンチプレス 1RM,Weight,FALSE,FALSE,FALSE,FALSE,kilogram,FALSE,0,1000,🏋️,60,30,0.1
+57f73572-0984-49f2-a561-e0d3896b6c9f,squat-10rm,Squat 10RM,スクワット 10RM,Weight,FALSE,FALSE,FALSE,FALSE,kilogram,FALSE,0,1000,🏋️,60,30,0.1
+eb97d8d4-ad77-4947-b1c4-c38f63dbdb06,bench-press-10rm,Bench press 10RM,ベンチプレス 10RM,Weight,FALSE,FALSE,FALSE,FALSE,kilogram,FALSE,0,1000,🏋️,60,30,0.1
+c6107606-f992-4217-9dff-15cfd274602f,horizontal-bar-hanging-time,Horizontal bar hanging time,鉄棒ぶら下がり秒数,TimeLongerIsBetter,TRUE,FALSE,TRUE,FALSE,time,FALSE,1,,🤸,20,10,0.01
+5a90047a-a9dc-4309-accd-9b608f6127d1,100m-dash,100m dash,100m走,TimeShorterIsBetter,FALSE,FALSE,TRUE,FALSE,millisecond,TRUE,8,,🏃‍♀️,15,2,0.1
+1add9bc4-4692-4685-abec-d8f0e5b99d6e,golf-18h-score,Golf 18H score,ゴルフ18Hスコア,CountLessIsBetter,FALSE,FALSE,TRUE,FALSE,none,TRUE,18,1000,⛳️,110,20,1
+e4cb05e3-1545-47a6-a8d7-a94d4c6e9903,golf-9h-score,Golf 9H score,ゴルフ9Hスコア,CountLessIsBetter,FALSE,FALSE,TRUE,FALSE,none,FALSE,9,500,⛳️,55,10,1
+590abb22-d603-45af-8c07-c3f96e1b6766,high-diving,High diving,高飛び込み,PointScore,FALSE,FALSE,TRUE,FALSE,point,TRUE,,,🏊,,,
+3fe04574-2853-40ea-8bf7-4f1c067bd8b4,number-of-push-ups,Number of push-ups,腕立て伏せ 回数,CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,times,FALSE,1,,💪,20,5,1
+eb8d2828-acbc-4971-99a3-90586044bb02,number-of-push-ups-in-1-minute,Number of push-ups in 1 minute,1分間 腕立て伏せ回数,CountMoreIsBetter,FALSE,FALSE,FALSE,FALSE,times,FALSE,1,,💪,20,5,1
+d7b2bfef-1315-4476-856f-af1b3f5d1527,abdominal-exercises,Abdominal exercises,腹筋 回数,CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,times,FALSE,1,,💪,20,5,1
+25909ff6-cfee-4fd4-839e-caebf960840f,number-of-sit-ups-in-1-minute,Number of sit-ups in 1 minute,1分間 腹筋回数,CountMoreIsBetter,FALSE,FALSE,FALSE,FALSE,times,FALSE,1,,💪,20,5,1
+cc829b3b-f883-42e3-9680-7c6038f9b309,number-of-pull-ups,Number of pull-ups,懸垂 回数,CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,times,FALSE,1,,💪,20,5,1
+626d4455-b01e-4023-b19a-552a2e045bc7,number-of-pull-ups-in-30-sec,Number of pull-ups in 30 sec,30秒間 懸垂回数,CountMoreIsBetter,FALSE,FALSE,FALSE,FALSE,times,FALSE,1,,💪,20,5,1
+ae7a4e61-ca9a-494f-9c7b-42d94cd40d5b,eyes‑closed-single‑leg-stance-duration,Eyes‑Closed Single‑Leg Stance Duration,目瞑り片足立ち 秒数,TimeLongerIsBetter,FALSE,FALSE,TRUE,FALSE,time,FALSE,0,,🙈,20,5,1
+98a12ca4-21df-448a-910c-1c8170975186,shuttle-run,Shuttle Run,シャトルラン,CountMoreIsBetter,FALSE,FALSE,TRUE,FALSE,times,FALSE,,,🏃‍♀️,,,
+9d76bcd2-df1f-4825-864d-58a08b73d00f,repeated-side-jumps,Repeated side jumps,反復横跳び,CountMoreIsBetter,FALSE,FALSE,TRUE,FALSE,times,FALSE,,,🏃‍♀️,,,1
+c622e39e-4e89-45bb-81c2-28eb3f8bc7e4,golf-practice-shots,Golf practice shots,ゴルフ 練習打球数,CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,balls,FALSE,1,,🏌️‍♀️,50,20,1
+1969ef48-e3f6-4032-99d0-f3f4e28f86a8,basketball-shot-attempts,Basketball shot attempts,バスケシュート試投数,CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,shots,FALSE,1,,🏀,50,20,1
+cf4f51fc-9a10-49aa-b41b-ff3eb4c5ff5e,number-of-successful-basketball-shots,Number of successful basketball shots,バスケシュート成功数,CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,shots,FALSE,0,,🏀,50,20,1
+2af81a29-a12b-4414-9afb-6dd40da69eb0,basketball-free-throw-successes,Basketball free throw successes,バスケフリースロー成功数,CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,shots,FALSE,0,,🏀,10,5,1
+356a200a-a24b-439f-86cc-7ec772cb968b,number-of-baseball-bat-swings,Number of Baseball Bat Swings,野球バット素振り 回数,CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,times,FALSE,1,,⚾️,30,20,1
+d196676b-9055-4fb4-b239-bdc84e54dd49,number-of-football-juggles,Number of Football Juggles,サッカーボールリフティング 回数,CountMoreIsBetter,TRUE,FALSE,TRUE,FALSE,times,FALSE,1,,⚽️,20,10,1
+6e10fe0a-b325-49eb-9a53-ca543e26cb2a,cmj,CMJ,カウンタームーブメントジャンプ,Height,FALSE,FALSE,TRUE,FALSE,centimeter,FALSE,,,🪽,,,
+b9c50ff1-f559-4227-9788-03dee22fadf2,rsi-reactive-strength-index,RSI Reactive Strength Index,RSI Reactive Strength Index,Index,FALSE,FALSE,TRUE,FALSE,none,FALSE,,,🪽,,,
+4b7225d8-b611-4250-a848-96854f5cd8d7,rsi-modified,RSI modified,RSI modified,Index,FALSE,FALSE,TRUE,FALSE,none,FALSE,,,🪽,,,
+63a4bd7e-e0a1-4f52-9b02-a4b8f8a2717e,body-weight,body weight,体重,Weight,FALSE,FALSE,TRUE,TRUE,kilogram,FALSE,,,⚖️,,,
+1b6044a2-e205-4e61-b9ed-b5d4436db6f6,body-fat-percentage,body fat percentage,体脂肪率,Percentage,FALSE,FALSE,TRUE,TRUE,percent,FALSE,,,⚖️,,,
+2f77b91a-6d06-4a13-b4fc-dbcc206fd514,swimming-freestyle-25m,Swimming Freestyle 25m,競泳自由形25m,TimeShorterIsBetter,FALSE,FALSE,TRUE,FALSE,millisecond,TRUE,5,,🏊,,,0.01
+5a73afe1-9ec8-478d-b6db-735e73411683,50m-freestyle-swimming,50m freestyle swimming,競泳自由形50m,TimeShorterIsBetter,FALSE,FALSE,TRUE,FALSE,millisecond,TRUE,10,,🏊,,,0.01
+b9772bba-efc2-40e2-9448-d8c348cbbc2f,swimming-100m-freestyle,Swimming 100m freestyle,競泳自由形100m,TimeShorterIsBetter,FALSE,FALSE,TRUE,FALSE,millisecond,TRUE,20,,🏊,,,0.01
+4a2683da-4689-4697-ba3a-3010b5bf5151,freestyle-swimming,Freestyle swimming,競泳自由形,Distance,TRUE,FALSE,TRUE,FALSE,meter,FALSE,,,🏊,,,
+1fe07b14-4cb5-46aa-9392-c241d1576191,running-5km,Running 5km,ランニング5km,TimeShorterIsBetter,FALSE,FALSE,FALSE,FALSE,time,FALSE,,,🏃‍♀️,,,
+56ab27ca-a970-43e8-b5bf-f8b3cca24f8a,10km-run,10km run,ランニング10km,TimeShorterIsBetter,FALSE,FALSE,FALSE,FALSE,time,FALSE,,,🏃‍♀️,,,
+8596156a-93a9-42dd-98e7-2a3b28ebf429,running,running,ランニング,Distance|Time,TRUE,FALSE,FALSE,FALSE,kilometer,FALSE,,,🏃‍♀️,,,
+d19a6375-07b8-45da-b4f3-c90c0b616e73,track-and-field-100m-x-4-relay-race,Track and field 100m x 4 relay race,陸上100m x 4 リレー走,TimeShorterIsBetter,FALSE,TRUE,FALSE,FALSE,millisecond,TRUE,,,🏃‍♀️,,,
+b409ae52-0d7e-4075-9789-f9026b2826a6,golf-club-head-speed,Golf club head speed,ゴルフクラブヘッドスピード,Speed,FALSE,FALSE,TRUE,FALSE,kmPerHour,FALSE,1,300,🏌️‍♀️,,,0.1
+fb1d7497-8827-40dd-b39f-b85b466a5a6d,golf-ball-speed,Golf Ball Speed,ゴルフボールスピード,Speed,FALSE,FALSE,TRUE,FALSE,kmPerHour,FALSE,1,500,🏌️‍♀️,,,0.1
+b9e80646-e2ca-4670-a581-5744bad7e26e,golf-ball-distance,Golf ball distance,ゴルフボール飛距離,Distance,FALSE,FALSE,TRUE,FALSE,meter,TRUE,1,1000,🏌️‍♀️,,,0.01

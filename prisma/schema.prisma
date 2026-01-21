@@ -1,0 +1,1968 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = []
+}
+
+generator zod {
+  provider = "zod-prisma-types"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+
+// 記録の単位
+enum SportRecordValue {
+  Distance
+  Weight
+  Time
+  Score
+}
+
+// 試合の順位が何によってつけられるか
+enum SportResultCriteria {
+  Point
+  Judgement
+  Record
+  Survival
+  None // Recreation
+}
+
+// 試合が何によって終わるか
+enum SportGameEndFactor {
+  Time
+  Count
+  Score
+  Survival
+}
+
+// Sport 競技テーブル
+model Sport {
+  id    String  @id @default(uuid())
+  name  String
+  slug  String  @unique
+  alias String?
+  emoji String
+
+  name_ja_JP String
+  name_en_US String
+
+  alias_ja_JP String
+  alias_en_US String
+
+  isUserPref                Boolean
+  isTeamPref                Boolean
+  isUserActivity            Boolean
+  isTeamActivity            Boolean
+  isOrgPref                 Boolean
+  isPersonalEvent           Boolean
+  isPersonalEventEntryPoint Boolean
+  isTeamEvent               Boolean
+  isTeamEventEntryPoint     Boolean
+  isEventResult             Boolean
+  isPersonalRecord          Boolean
+  resultCriteria            SportResultCriteria[]
+  gameEndFactor             SportGameEndFactor[]
+  recordValue               SportRecordValue?
+
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  attributes SportAttribute[]
+
+  teamActivities                    TeamActivity[]
+  users                             UserSport[]
+  teams                             TeamSport[]
+  eventEntryPoints                  EventEntryPointSport[]
+  personalResult                    PersonalResult[]
+  personalRecords                   PersonalRecordSport[]
+  teamResults                       TeamResultSport[]
+  personalActivities                PersonalActivity[]
+  organizations                     OrganizationSport[]
+  categories                        SportCategory[]
+  popularityByCountry               SportPopularityByCountry[]
+  relatedWorkouts                   WorkoutAndDrillMenu[]
+  teamMemberApplicationRequirements TeamMemberApplicationRequirement[]
+}
+
+// スポーツ属性種別
+enum SportAttributeType {
+  Gender
+  NumberOfPlayers // 9人制, ダブルス, シングルス, 団体戦... など。
+  Size // 施設やコートの大きさ、ボール、ネットなど設備の大きさの差異
+  Rule // 準硬式, 軟式... , ラリーポイント制, サイドアウト制
+  Experience // 初心者、上級者、ブランク歓迎
+  GroupCategory // 小学生, 中学生, 高校生, 社会人, U18, U15, Adult, 社会人, シニア, マスターズ
+}
+
+// SportAttribute 競技に紐づいた属性のテーブル。SportAttributeType の値。
+model SportAttribute {
+  id                 String                           @id @default(uuid())
+  name               String
+  sportId            String
+  alias              String?
+  sport              Sport                            @relation(fields: [sportId], references: [id])
+  attributeType      SportAttributeType?
+  users              UserSportAttribute[]
+  teams              TeamSportAttribute[]
+  teamActivities     TeamActivitySportAttribute[]
+  eventEntryPoints   EventEntryPointSportAttribute[]
+  personalRecords    PersonalRecordSportAttribute[]
+  personalActivities PersonalActivitySportAttribute[]
+  teamResults        TeamResultSportAttribute[]
+  organizations      OrganizationSportAttribute[]
+  teamGroups         TeamGroupSportAttribute[]
+  personalResults    PersonalResultSportAttribute[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 国マスターデータ
+model Country {
+  id            String                     @id @default(uuid())
+  name          String
+  code          String
+  latitude      Float
+  longitude     Float
+  languages     String[]
+  zoom          Float
+  states        State[]
+  cities        City[]
+  places        Place[]
+  pois          PointOfInterest[]
+  popularSports SportPopularityByCountry[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 州、都道府県マスター
+model State {
+  id        String            @id @default(uuid())
+  name      String
+  code      String
+  latitude  Float
+  longitude Float
+  zoom      Float?
+  countryId String
+  country   Country           @relation(fields: [countryId], references: [id])
+  cities    City[]
+  places    Place[]
+  pois      PointOfInterest[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 街、市区町村マスター
+model City {
+  id        String            @id @default(uuid())
+  name      String
+  code      String
+  latitude  Float
+  longitude Float
+  zoom      Float?
+  countryId String
+  country   Country           @relation(fields: [countryId], references: [id])
+  stateId   String
+  state     State             @relation(fields: [stateId], references: [id])
+  places    Place[]
+  pois      PointOfInterest[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 場所マスター
+model Place {
+  id                String   @id @default(uuid())
+  name              String?
+  nameLanguage      String?
+  code              String?
+  type              String? // 体育館、運動場、駅...
+  latitude          Float?
+  longitude         Float?
+  zoom              Float?
+  countryId         String?
+  country           Country? @relation(fields: [countryId], references: [id])
+  stateId           String?
+  state             State?   @relation(fields: [stateId], references: [id])
+  cityId            String?
+  city              City?    @relation(fields: [cityId], references: [id])
+  googleMapsPlaceId String? // place autocomplete widget から返される place id
+
+  userPlaces UserPlace[]
+  teamPlaces TeamPlace[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Placeより細かい粒度の単位。体育館の第一体育室など。
+model PointOfInterest {
+  id           String @id @default(uuid())
+  name         String
+  nameLanguage String
+  type         String // 体育館、運動場、駅...
+
+  latitude  Float
+  longitude Float
+  zoom      Float?
+  countryId String?
+  country   Country? @relation(fields: [countryId], references: [id])
+  stateId   String?
+  state     State?   @relation(fields: [stateId], references: [id])
+  cityId    String?
+  city      City?    @relation(fields: [cityId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SportCategory {
+  id     String  @id @default(uuid())
+  name   String
+  sports Sport[]
+}
+
+// 国ごとの人気スポーツのマスターデータ
+// 優先表示に使う
+// TODO: カテゴリー？ スポーツ
+model SportPopularityByCountry {
+  id        String            @id @default(uuid())
+  sportId   String
+  sport     Sport             @relation(fields: [sportId], references: [id])
+  countryId String
+  country   Country           @relation(fields: [countryId], references: [id])
+  priority  Int
+  ageRange  Int? // 人気のプレーする年齢層
+  gender    BiologicalGender? // 人気のプレーする性別
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
+// 生物学上の性別。Eveleteの性別は必ず生物学上の性別を扱う。
+enum BiologicalGender {
+  Male
+  Female
+}
+
+// ユーザー認証
+model UserAuth {
+  id             String  @id @default(uuid())
+  userId         String  @unique
+  passwordHash   String
+  provider       String  @default("Credentials")
+  providerUserId String?
+  user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ユーザー
+// 他のユーザーからも参照されて良い情報のみを格納する。
+model User {
+  id               String   @id @default(uuid())
+  slug             String   @unique
+  profileImageUrl  String?
+  coverImageUrl    String?
+  displayName      String
+  email            String   @unique
+  description      String
+  isDeleted        Boolean? @default(false)
+  hasVerifiedEmail Boolean  @default(false) // 
+
+  hasSetupMinimumPrefs          Boolean                    @default(false)
+  birthday                      DateTime?
+  biologicalGender              BiologicalGender?
+  prefIsPrivateAccount          Boolean                    @default(false) // 鍵付きアカウントか
+  prefWeightUnit                WeightUnit                 @default(value: KILOGRAM)
+  prefDistanceUnit              DistanceUnit               @default(value: METER)
+  prefDefaultActivityVisibility PersonalActivityVisibility @default(value: FOLLOWERS)
+  prefSlugLastUpdatedAt         DateTime? // 最後にslugが更新された時間。default null。
+
+  personalActivitySummary TempPersonalActivitySummary?
+  userFocuses             UserFocus[]
+
+  createdTeamActivities           TeamActivity[]
+  sports                          UserSport[]
+  sportAttributes                 UserSportAttribute[]
+  organizations                   OrganizationMember[]
+  teams                           TeamMember[]
+  places                          UserPlace[]
+  instantTeams                    InstantTeamMember[]
+  activities                      PersonalActivity[]
+  teamChatPosts                   TeamChatPost[]
+  eventEntries                    PersonalEventEntry[]
+  posts                           UserPost[]
+  personalResults                 PersonalResult[]
+  personalRecords                 PersonalRecord[]
+  sentRequests                    FriendRequest[]                       @relation("SentRequests")
+  receivedRequests                FriendRequest[]                       @relation("ReceivedRequests")
+  friends                         Friend[]                              @relation("UserFriends")
+  friendsWith                     Friend[]                              @relation("FriendOf")
+  followers                       UserFollow[]                          @relation("asFollowing")
+  followings                      UserFollow[]                          @relation("asFollower")
+  followingTeams                  TeamFollow[]
+  likedUserPosts                  UserPostLike[]
+  likedUserComments               UserPostComment[]
+  affiliationCategories           UserAffiliationCategory[]
+  teamActivityEvaluations         TeamActivityEvaluation[]
+  // affiliation : 所属団体項目も必要? TODO: 
+  teamActivityAttendanceResponse  TeamActivityAttendanceResponse[]
+  bodyData                        PersonalBodyData[]
+  sentFollowRequests              UserFollowRequest[]                   @relation("asSender")
+  receivedFollowRequests          UserFollowRequest[]                   @relation("asReceiver")
+  receivedTeamActivityInvitations TeamActivityInvitation[]              @relation("asInvitedUser")
+  sentTeamActivityInvitations     TeamActivityInvitation[]              @relation("asInvitingUser")
+  receivedTeamMemberInvitations   TeamMemberInvitation[]                @relation("asInvitedUser")
+  sentTeamMemberInvitations       TeamMemberInvitation[]                @relation("asInvitingUser")
+  sentTeamJoinRequests            TeamJoinRequest[]                     @relation("asRequester")
+  approvedTeamJoinRequests        TeamJoinRequest[]                     @relation("asApprover")
+  awaitingTeamActivitiesAsGuest   TeamActivityAttendanceGuestWaitlist[]
+  postedTeamPosts                 TeamPost[]
+  likedTeamPosts                  TeamPostLike[]
+  commentedTeamPosts              TeamPostComment[]
+  editedTeamActivities            TeamActivityRevision[]
+  auth                            UserAuth?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ユーザーの年齢カテゴリー (どう使うか未定)
+model UserAffiliationCategory {
+  userId                String
+  user                  User                @relation(fields: [userId], references: [id])
+  affiliationCategoryId String
+  affiliationCategory   AffiliationCategory @relation(fields: [affiliationCategoryId], references: [id])
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+
+  @@id([userId, affiliationCategoryId])
+}
+
+// ユーザーのつながり。
+// クエリパフォーマンスのために、つながり1つにつき2レコード作成される。
+model Friend {
+  id        String   @id @default(cuid())
+  userId    String
+  friendId  String
+  createdAt DateTime @default(now())
+
+  user   User @relation("UserFriends", fields: [userId], references: [id])
+  friend User @relation("FriendOf", fields: [friendId], references: [id])
+
+  @@unique([userId, friendId])
+}
+
+model FriendRequest {
+  id            String             @id @default(cuid())
+  fromUserId    String
+  toUserId      String
+  status        FriendRequestState @default(PENDING)
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  rejectedCount Int                @default(0) // 拒否された回数
+  cooldownUntil DateTime? // 冷却期間の終了時刻（拒否後にのみ設定）
+
+  fromUser User @relation("SentRequests", fields: [fromUserId], references: [id])
+  toUser   User @relation("ReceivedRequests", fields: [toUserId], references: [id])
+
+  @@unique([fromUserId, toUserId])
+}
+
+enum FriendRequestState {
+  PENDING
+  ACCEPTED
+  REJECTED
+  BLOCKED // 拒否されすぎたため、再申請不可
+}
+
+// ユーザー間のフォロー関係
+model UserFollow {
+  followerId  String
+  followingId String
+  follower    User     @relation("asFollower", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("asFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@id([followerId, followingId])
+}
+
+enum UserFollowRequestState {
+  APPROVED
+  PENDING
+  DENIED
+  CANCELED
+}
+
+// 鍵付きアカウントにフォローリクエスト
+model UserFollowRequest {
+  id              String                 @id @default(uuid())
+  senderId        String
+  receiverId      String
+  receiver        User                   @relation("asReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  sender          User                   @relation("asSender", fields: [senderId], references: [id], onDelete: Cascade)
+  requestStatus   UserFollowRequestState
+  requestSentAt   DateTime               @default(now())
+  statusChangedAt DateTime
+  updatedAt       DateTime               @updatedAt
+}
+
+// ユーザーが行っている,好き, 興味のあるスポーツ。プロフィールに表示
+model UserSport {
+  userId       String
+  user         User                 @relation(fields: [userId], references: [id])
+  sportId      String
+  sport        Sport                @relation(fields: [sportId], references: [id])
+  displayOrder Int
+  attributes   UserSportAttribute[]
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  @@id([userId, sportId])
+}
+
+// ユーザーが行っている,好き, 興味のあるスポーツの属性。プロフィールに表示
+model UserSportAttribute {
+  userId           String
+  user             User           @relation(fields: [userId], references: [id])
+  sportAttributeId String
+  sportAttribute   SportAttribute @relation(fields: [sportAttributeId], references: [id])
+  displayOrder     Int
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  userSportUserId  String?
+  userSportSportId String?
+  userSport        UserSport?     @relation(fields: [userSportUserId, userSportSportId], references: [userId, sportId])
+
+  @@id([userId, sportAttributeId])
+}
+
+enum UserPlaceType {
+  Living
+  Working
+  Visiting
+  Favorite
+}
+
+// TODO: 設計見直す
+// ユーザーの活動エリア、よく行く場所。おすすめ機能などに使う。
+model UserPlace {
+  userId    String
+  user      User          @relation(fields: [userId], references: [id])
+  placeType UserPlaceType // 自宅、職場、お気に入り、、、など
+  placeId   String
+  place     Place         @relation(fields: [placeId], references: [id])
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@id([userId, placeId])
+}
+
+// ジュニア、社会人、高校、中学、大学、国代表、、、
+model AffiliationCategory {
+  id      String                    @id @default(uuid())
+  slug    String
+  name    String
+  minAge  Int?
+  maxAge  Int?
+  locale  String? // 国特有のカテゴリーに使う
+  sportId String? // スポーツï特有のカテゴリーに使う
+  teams   TeamAffiliationCategory[]
+  users   UserAffiliationCategory[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // TODO: 特定のsportsやsportAttributesに限定したものもあるかも。
+}
+
+// チームの活動場所
+model TeamPlace {
+  teamId  String
+  team    Team   @relation(fields: [teamId], references: [id])
+  placeId String
+  place   Place  @relation(fields: [placeId], references: [id])
+
+  placeType     String // 練習場所、大会出場場所・・・
+  specificPlace String? // コート番号や部屋の名前など、GoogleMapsより細かい粒度の指定
+  details       String? // 場所の行き方や集合場所などの細かい指定や詳細注意事項など
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([teamId, placeId])
+}
+
+// チームテーブル
+// TODO: Clubの方がしっくりくる？
+// ヨガとかジョギングも含めるなら。
+model Team {
+  id                      String    @id @default(uuid())
+  displayName             String
+  abbreviation            String // チーム名の略称。表示に使う。Arsenal Football Club => Arsenal
+  slug                    String    @unique // URL用
+  description             String
+  imageUrl                String
+  coverImageUrl           String?
+  themeColor              String? // ブランディング用途, hex?
+  establishedAt           DateTime?
+  canRequestToJoin        Boolean // リクエスト制
+  canSearch               Boolean // チームが検索に引っ掛かるか
+  canViewActivities       Boolean // 非ゲスト許可のActivityをメンバーでないユーザーが見れるか
+  canViewMembers          Boolean // メンバーでないユーザーがメンバー一覧を見れるか
+  acceptMembersAgeUnder18 Boolean   @default(false) // 18歳以下を含む
+
+  minMemberSkillLevel      Int? // 実際のチームのレベル感
+  maxMemberSkillLevel      Int? // 実際のチームのレベル感
+  minMemberAge             Int?
+  maxMemberAge             Int?
+  averageActivityFrequency Int?
+  teamObjective            Int[] // チームの目的 (ゆるく ~ ガチ, またはどちらも)
+
+  minJoinSkillLevel Int? // チーム参加希望者に求める競技のレベル感
+  maxJoinSkillLevel Int?
+  minJoinAge        Int? // チーム参加希望者に求める年齢
+  maxJoinAge        Int?
+  joinPlayerGender  BiologicalGender[] // プレイヤーとして参加可能な性別
+  recruitingMessage String? // チームの目標, 募集ポジション, 募集人柄, 会費,保険,特記事項,求める意識,求める参加率
+
+  youtubeChannelUrl String?
+  instagramUrl      String?
+  externalLinkUrl   String?
+  tiktokUrl         String?
+
+  currency              String // 支払いに使う通貨単位
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  isDeleted             Boolean?  @default(false)
+  prefSlugSetupDatetime DateTime? // slugを設定した日時。設定したら、変更できない or 将来的に一定期間で変更可能。指定せずにチーム作成したら、ここはnullで、設定から変更できる。
+
+  sports                        TeamSport[]
+  sportAttributes               TeamSportAttribute[]
+  places                        TeamPlace[]
+  activities                    TeamActivity[]
+  groups                        TeamGroup[]
+  members                       TeamMember[]
+  chatChannels                  TeamChatPost[]
+  sentInvitations               TeamMemberInvitation[]
+  eventEntries                  TeamEventEntry[]
+  affiliationCategories         TeamAffiliationCategory[]
+  sentTeamActivityInvitations   TeamActivityInvitation[]
+  receivedTeamJoinRequests      TeamJoinRequest[]
+  followers                     TeamFollow[]
+  posts                         TeamPost[]
+  memberApplicationRequirements TeamMemberApplicationRequirement[]
+}
+
+// チーム参加リクエストの状態enum
+enum TeamJoinRequestState {
+  APPROVED
+  PENDING
+  DENIED
+  CANCELED
+}
+
+// チーム参加リクエスト (許可しているチームだけ)
+model TeamJoinRequest {
+  id              String               @id @default(uuid())
+  requesterId     String
+  requester       User                 @relation("asRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+  teamId          String
+  team            Team                 @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  requestStatus   TeamJoinRequestState
+  requestSentAt   DateTime             @default(now())
+  approverId      String?
+  approver        User?                @relation("asApprover", fields: [approverId], references: [id], onDelete: Cascade)
+  statusChangedAt DateTime
+  updatedAt       DateTime             @updatedAt
+}
+
+// チームのカテゴリー : 小学生、中学部活、U18、社会人、、、など。
+model TeamAffiliationCategory {
+  teamId                String
+  team                  Team                @relation(fields: [teamId], references: [id])
+  affiliationCategoryId String
+  affiliationCategory   AffiliationCategory @relation(fields: [affiliationCategoryId], references: [id])
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+
+  @@id([teamId, affiliationCategoryId])
+}
+
+// メンバー募集要件 : いらないかも。
+// => 知らん人をメンバーに入れたいとは思わない。一度体験ありきということは、ゲスト参加ありきの方がいい。
+// しかしメンバーに求めるレベルとか要素を書く場所は欲しいかも。
+// レベル,年齢,チームの目標,やる競技/種目,ルール,募集してるポジション,人柄,会費,保険,特記事項,求める意識,求める参加率
+// 活動場所,募集人数, 性別
+// => 競技ごとにバラバラかもしれないので、Teamテーブルには持たずに分ける。
+
+model TeamMemberApplicationRequirement {
+  id          String             @id @default(uuid())
+  teamId      String
+  sportId     String
+  startAt     DateTime
+  endAt       DateTime
+  levelRange  Int[]
+  ageRange    Int[]
+  gender      BiologicalGender[]
+  description String
+  positions   String[]
+
+  team  Team  @relation(fields: [teamId], references: [id])
+  sport Sport @relation(fields: [sportId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// チームが行うスポーツ。チームホームページに表示
+model TeamSport {
+  teamId    String
+  team      Team     @relation(fields: [teamId], references: [id])
+  sportId   String
+  sport     Sport    @relation(fields: [sportId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([teamId, sportId])
+}
+
+// チームが行うスポーツの属性。チームホームページに表示
+model TeamSportAttribute {
+  teamId           String
+  team             Team           @relation(fields: [teamId], references: [id])
+  sportAttributeId String
+  sportAttribute   SportAttribute @relation(fields: [sportAttributeId], references: [id])
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@id([teamId, sportAttributeId])
+}
+
+// TeamMemberテーブル
+model TeamMember {
+  id                    Int      @id @default(autoincrement())
+  nickname              String? // チーム内での呼び名
+  userId                String
+  teamId                String
+  isOwner               Boolean
+  role                  String?
+  relationship          String? // player, staff, parent, ob/og TODO: player兼staffなど複数持つこともあるのでは？
+  isAdmin               Boolean // チーム削除, チームメンバーの権限変更, チームの設定/概要など変更
+  canManagePayment      Boolean // 収支。お金の管理。
+  canManageTeamMember   Boolean // チームメンバーの招待/除名
+  canManageEvent        Boolean // 大会などイベントへの参加申込/キャンセル/運営とのコミュニケーション
+  canManageResult       Boolean // チームの試合結果の作成/更新/削除
+  canManageTeamActivity Boolean // 練習など活動の作成/更新/削除
+  isPubliclyVisible     Boolean // 非メンバーもメンバー情報（名前のみ）が見れる
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  user   User              @relation(fields: [userId], references: [id])
+  team   Team              @relation(fields: [teamId], references: [id])
+  groups TeamGroupMember[]
+
+  @@unique([userId, teamId])
+}
+
+// チーム内の部門。練習割り当てや連絡で使う。
+// 陸上チームの長距離グループ。
+// 1年生は月曜,3年生は火曜と木曜、男女混合チームの女子練日など
+// 陸上部(チーム)の長距離グループとか？ 長距離1年グループを作ってもらう。
+// 卒業生や保護者とかもここか？
+model TeamGroup {
+  id                     String                        @id @default(uuid())
+  name                   String
+  description            String
+  team                   Team                          @relation(fields: [teamId], references: [id])
+  members                TeamGroupMember[]
+  createdAt              DateTime                      @default(now())
+  updatedAt              DateTime                      @updatedAt
+  activities             TeamActivityGroupAssignment[]
+  teamId                 String
+  teamMemberInvitation   TeamMemberInvitation?         @relation(fields: [teamMemberInvitationId], references: [id])
+  teamMemberInvitationId String?
+  sportAttributes        TeamGroupSportAttribute[]
+}
+
+// チームグループのメンバー
+model TeamGroupMember {
+  group        TeamGroup  @relation(fields: [teamGroupId], references: [id])
+  member       TeamMember @relation(fields: [teamMemberId], references: [id])
+  role         String?
+  teamGroupId  String
+  teamMemberId Int
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@id(name: "groupMemberId", [teamGroupId, teamMemberId])
+}
+
+// グループの専門とする属性
+model TeamGroupSportAttribute {
+  teamGroupId      String
+  teamGroup        TeamGroup      @relation(fields: [teamGroupId], references: [id])
+  sportAttributeId String
+  sportAttribute   SportAttribute @relation(fields: [sportAttributeId], references: [id])
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@id([teamGroupId, sportAttributeId])
+}
+
+// チーム活動の公開範囲enum
+enum TeamActivityVisibility {
+  ADMINS
+  TEAM_GROUP
+  TEAM_INTERNAL
+  TEAM_FOLLOWERS
+  PUBLIC
+}
+
+// チーム活動の状態enum
+enum TeamActivityStatus {
+  // DRAFT
+  PUBLIC
+  CANCELED
+}
+
+// チーム活動の種別enum
+enum TeamActivityType {
+  COMPETITION // 大会
+  RECORD // 記録
+  RESULT // 結果
+  PRACTICE // 練習 and DROPIN
+  // DROPIN // PRACTICE内の isGuestAllowed で判定するため、削除
+  PRACTICAL_PRACTICE // 練習試合やスクリメージ
+  EVENT // 飲み会、ミーティング、合宿、旅行
+}
+
+enum TeamActivityPaymentMethod {
+  FACE_TO_FACE
+}
+
+// TeamActivityテーブル
+model TeamActivity {
+  id                         String                                 @id @default(uuid())
+  recurringId                String?
+  name                       String?
+  description                String?
+  teamActivityType           TeamActivityType // 複数の場合があるかもしれないが、一旦無視。
+  startDatetime              DateTime
+  endDatetime                DateTime?
+  durationMinutes            Int?
+  status                     TeamActivityStatus                     @default(PUBLIC)
+  visibility                 TeamActivityVisibility                 @default(TEAM_INTERNAL)
+  place                      String?
+  placeName                  String?
+  placeNameLanguage          String?
+  placeLat                   Float?
+  placeLng                   Float?
+  placeGoogleMapsPlaceId     String?
+  placeCityId                String?
+  placeStateId               String?
+  placeCountryId             String?
+  placeDetails               String? // 場所に関する補足事項をテキストで入力
+  priceForGuest              Float?
+  priceForInvited            Float?
+  priceForMember             Float?
+  paymentMethod              TeamActivityPaymentMethod[]
+  isInvitationAllowed        Boolean                                @default(false)
+  isGuestAllowed             Boolean                                @default(false)
+  maxInvitationAttendees     Int?
+  maxGuestAttendees          Int?
+  maxAttendees               Int?
+  currentAttendees           Int                                    @default(0)
+  currentInvitationAttendees Int                                    @default(0)
+  currentGuestAttendees      Int                                    @default(0)
+  createdAt                  DateTime                               @default(now())
+  updatedAt                  DateTime                               @updatedAt
+  sportId                    String? // 飲み会イベントなどスポーツがないものもある
+  sport                      Sport?                                 @relation(fields: [sportId], references: [id])
+  eventId                    String?
+  event                      Event?                                 @relation(fields: [eventId], references: [id])
+  eventEntry                 TeamEventEntry?
+  teamId                     String
+  team                       Team                                   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  creatorId                  String
+  creator                    User                                   @relation(fields: [creatorId], references: [id])
+  groups                     TeamActivityGroupAssignment[]
+  teamChatChannels           TeamChatChannel[]
+  sportAttributes            TeamActivitySportAttribute[]
+  teamResults                TeamResult[]
+  evaluations                TeamActivityEvaluation[]
+  attendanceResponses        TeamActivityAttendanceResponse[]
+  invitations                TeamActivityInvitation[]
+  waitingGuests              TeamActivityAttendanceGuestWaitlist[]
+  participationRequirements  TeamActivityParticipationRequirement[]
+  posts                      TeamPost[]
+}
+
+model RecurringTeamActivity {
+  id            String   @id @default(uuid())
+  recurringType String // TODO: enum 化 
+  startDate     DateTime
+  endDate       DateTime
+}
+
+// TODO: 実装する
+// 変更履歴を保存 : place, price, guest allowance, datetime, name, rules, sports
+model TeamActivityRevision {
+  id          String   @id @default(uuid())
+  value       String
+  updatedById String
+  updatedBy   User     @relation(fields: [updatedById], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum TeamActivityParticipationRequirementType {
+  Gender // 生物学上の性別
+  MinAge // 年齢 - 以上
+  MaxAge // 年齢 - 以下
+  PlayerPosition // 
+  MinSchoolGrade // 学年 - 以上
+  MaxSchoolGrade // 学年 - 以下
+  MinPlayerExperience // 競技経験 - 以上
+  MaxPlayerExperience // 競技経験 - 以下
+  Qualification // 必要参加資格
+  MinRank // ランク(?) - 以下
+  MaxRank // ランク(?) - 以上
+  LivingArea // 在住エリア
+  WorkingArea // 在勤エリア
+  AffiliationCategory // 所属カテゴリー
+}
+
+// チーム活動への参加条件
+model TeamActivityParticipationRequirement {
+  id             String                                   @id @default(uuid())
+  teamActivityId String
+  teamActivity   TeamActivity                             @relation(fields: [teamActivityId], references: [id])
+  type           TeamActivityParticipationRequirementType
+  intValue       Int?
+  stringValue    String?
+  createdAt      DateTime                                 @default(now())
+  updatedAt      DateTime                                 @updatedAt
+}
+
+// チーム活動の出欠回答種別enum
+enum TeamActivityAttendanceResponseType {
+  GOING
+  NOT_GOING
+  MAYBE
+  CANCELED__USER_REASON
+  CANCELED__TEAM_REASON
+}
+
+// チーム活動のメンバーからの出欠回答
+model TeamActivityAttendanceResponse {
+  teamActivityId     String
+  teamActivity       TeamActivity                       @relation(fields: [teamActivityId], references: [id])
+  userId             String
+  user               User                               @relation(fields: [userId], references: [id])
+  isGuest            Boolean                            @default(false)
+  isInvited          Boolean                            @default(false)
+  response           TeamActivityAttendanceResponseType
+  responseComment    String? // 特にDropInがキャンセルした場合のコメント入力に使う
+  cancelReason       String?
+  personalActivityId String?                            @unique
+  personalActivity   PersonalActivity?                  @relation(fields: [personalActivityId], references: [id])
+  // team activityに直接personalActivityを紐づけてもいいが、
+  // 参加と返事してやっぱり参加できないなどありそうなので、返事とPersonalActivityは分ける。
+  // チームを抜けた場合とか、responseはどうでもいいが、personal activityだけは記録残しやすくするために、クッションを挟んで結合を弱める
+  // ta --< ta attend res --- pa
+  responseChangedAt  DateTime                           @default(now()) // 回答状況を最後に変更した日時
+  createdAt          DateTime                           @default(now())
+  updatedAt          DateTime                           @updatedAt
+
+  @@id([userId, teamActivityId])
+}
+
+// チーム活動のDropInのWaiting List
+// TODO: waitlist よりも、通知リストを送って早い者勝ちの方がいいかも。
+model TeamActivityAttendanceGuestWaitlist {
+  teamActivityId String
+  teamActivity   TeamActivity @relation(fields: [teamActivityId], references: [id])
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@id([userId, teamActivityId])
+}
+
+// チーム活動に割り当てられたグループ。
+// 陸上部のある日ある場所での練習が、中距離グループと長距離グループが対象などのユースケース。
+model TeamActivityGroupAssignment {
+  teamActivityId String
+  teamActivity   TeamActivity @relation(fields: [teamActivityId], references: [id])
+  teamGroupId    String
+  teamGroup      TeamGroup    @relation(fields: [teamGroupId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@id([teamGroupId, teamActivityId])
+}
+
+// チーム活動で行うスポーツ
+// TODO: 単一TeamActivityで、複数スポーツを行うのか？
+// => やらないと判断したので削除
+// model TeamActivitySport {
+//   teamActivityId String
+//   teamActivity   TeamActivity @relation(fields: [teamActivityId], references: [id])
+//   sportId        String
+//   sport          Sport        @relation(fields: [sportId], references: [id])
+//   createdAt      DateTime     @default(now())
+//   updatedAt      DateTime     @updatedAt
+
+//   @@id([teamActivityId, sportId])
+// }
+
+// チーム活動で行うスポーツの属性
+model TeamActivitySportAttribute {
+  teamActivityId   String
+  teamActivity     TeamActivity   @relation(fields: [teamActivityId], references: [id])
+  sportAttributeId String
+  sportAttribute   SportAttribute @relation(fields: [sportAttributeId], references: [id])
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@id([teamActivityId, sportAttributeId])
+}
+
+// TeamActivity に対するゲスト参加者の評価
+model TeamActivityEvaluation {
+  teamActivityId String
+  teamActivity   TeamActivity @relation(fields: [teamActivityId], references: [id])
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  rating         Int
+  comment        String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@id([teamActivityId, userId])
+}
+
+// TeamFollow
+// メンバーではないけど、動向をチェックしたい人向け。
+model TeamFollow {
+  userId    String
+  teamId    String
+  user      User     @relation(fields: [userId], references: [id])
+  team      Team     @relation(fields: [teamId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([userId, teamId])
+}
+
+// チームチャットのチャンネル種別
+enum TeamChatChannelType {
+  TEAM
+  TEAM_GROUP
+  TEAM_ACTIVITY
+  TEAM_ACTIVITY_INCLUDING_GUESTS
+  TEAM_MEMBER_INVITATION // チームへの参加に招待するメッセージ
+  TEAM_ACTIVITY_INVITATION // チームの練習に招待するメッセージ
+  INSTANT_TEAM
+}
+
+// チーム内チャットチャンネル
+model TeamChatChannel {
+  id                String              @id @default(uuid())
+  channelName       String
+  teamId            String
+  activityId        String?
+  resultId          String?
+  channelType       TeamChatChannelType
+  isGuestAccessible Boolean
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  activity          TeamActivity?       @relation(fields: [activityId], references: [id])
+  posts             TeamChatPost[]
+}
+
+// チーム内チャットの投稿
+model TeamChatPost {
+  id        String          @id @default(uuid())
+  teamId    String
+  userId    String
+  channelId String
+  isGuest   Boolean
+  postBody  String
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  user      User            @relation(fields: [userId], references: [id])
+  team      Team            @relation(fields: [teamId], references: [id])
+  channel   TeamChatChannel @relation(fields: [channelId], references: [id])
+}
+
+// ユーザーに対してチームからの招待状。この時点では既存ユーザー以外も対象なので、userIdはオプショナル。
+model TeamMemberInvitation {
+  id              String      @id @default(uuid())
+  uuidToken       String
+  team            Team        @relation(fields: [teamId], references: [id])
+  teamGroups      TeamGroup[]
+  emailForNonUser String?
+  status          String
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  user            User?       @relation("asInvitedUser", fields: [userId], references: [id], onDelete: Cascade)
+  userId          String?
+  teamId          String
+  senderId        String
+  sender          User        @relation("asInvitingUser", fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+// 非メンバーのユーザーに対して、練習や大会などへの参加招待
+model TeamActivityInvitation {
+  id             String       @id @default(uuid())
+  uuidToken      String
+  team           Team         @relation(fields: [teamId], references: [id])
+  teamActivity   TeamActivity @relation(fields: [teamActivityId], references: [id])
+  status         String // TODO: enum
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  user           User         @relation("asInvitedUser", fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  teamId         String
+  teamActivityId String
+  senderId       String
+  sender         User         @relation("asInvitingUser", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@unique([teamActivityId, userId])
+}
+
+// Organizationテーブル
+// 大会を主催する団体としての Organization
+model Organization {
+  id              String                       @id @default(uuid())
+  slug            String                       @unique
+  displayName     String
+  description     String
+  imageUrl        String?
+  isVerified      Boolean                      @default(false) // ちゃんとした団体か
+  createdAt       DateTime                     @default(now())
+  updatedAt       DateTime                     @updatedAt
+  isDeleted       Boolean?                     @default(false)
+  sports          OrganizationSport[]
+  sportAttributes OrganizationSportAttribute[]
+  members         OrganizationMember[]
+  events          Event[]
+}
+
+// 大会を主催する団体が扱うスポーツ
+model OrganizationSport {
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  sportId        String
+  sport          Sport        @relation(fields: [sportId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@id([organizationId, sportId])
+}
+
+// 大会を主催する団体が扱うスポーツ属性
+model OrganizationSportAttribute {
+  organizationId   String
+  organization     Organization   @relation(fields: [organizationId], references: [id])
+  sportAttributeId String
+  sportAttribute   SportAttribute @relation(fields: [sportAttributeId], references: [id])
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@id([organizationId, sportAttributeId])
+}
+
+// OrganizationMemberテーブル
+model OrganizationMember {
+  role           String
+  userId         String
+  organizationId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  user           User         @relation(fields: [userId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@id([userId, organizationId])
+}
+
+// 個人的な活動の状態enum
+enum PersonalActivityStatus {
+  PUBLISHED
+  DRAFT
+  DELETED
+}
+
+// 個人的な活動の公開範囲enum
+enum PersonalActivityVisibility {
+  PRIVATE // 自分のみ
+  FOLLOWERS // 自分 + フォロワー
+  PUBLIC // 公開
+}
+
+// 個人的な活動の種別enum
+enum PersonalActivityType {
+  WORKOUT // 個人のトレーニング
+  BODY_DATA // 身体データの追加
+  RECORD // 記録測定実施
+  RESULT // 結果 (順位) を伴う活動の実施
+  PRACTICE // 練習
+  PRACTICAL_PRACTICE // 実践練習
+  DROPIN // ドロップイン参加 (ゲストとして)
+  CLINIC // コーチング、教室、セミナー
+  ENJOY // エンジョイ - 友達とゴルフなど
+  REHAB // リハビリ
+  TEAM_ACTIVITY // チームの練習
+  TEAM_PRACTICE // チームの練習
+  TEAM_EVENT // チームの大会やイベント
+  COMPETITION // 大会
+  RECORD_TRIAL // 記録会イベント
+}
+
+// ユーザー個人の活動
+model PersonalActivity {
+  id                             String                           @id @default(uuid())
+  recurringId                    String?
+  name                           String?
+  userId                         String
+  description                    String?
+  activityType                   PersonalActivityType[]
+  eventId                        String?
+  bodyDataId                     String?                          @unique
+  startDatetime                  DateTime
+  endDatetime                    DateTime?
+  durationMinutes                Int?
+  place                          String?
+  status                         PersonalActivityStatus           @default(PUBLISHED)
+  visibility                     PersonalActivityVisibility       @default(PRIVATE)
+  asGuest                        Boolean?                         @default(false)
+  isDeleted                      Boolean?                         @default(false)
+  user                           User                             @relation(fields: [userId], references: [id])
+  event                          Event?                           @relation(fields: [eventId], references: [id])
+  bodyData                       PersonalBodyData?                @relation(fields: [bodyDataId], references: [id])
+  teamActivityAttendanceResponse TeamActivityAttendanceResponse?
+  menus                          PersonalActivityMenu[]
+  sportId                        String? // 1 activity には 1スポーツしか関連づけられない。複数のスポーツを行う予定は別のアクティビティにする。記録やイベントなどもアクティビティにできるので、オプショナル。
+  sport                          Sport?                           @relation(fields: [sportId], references: [id])
+  sportAttributes                PersonalActivitySportAttribute[]
+  posts                          UserPost[]
+  personalResults                PersonalResult[]
+  personalRecords                PersonalRecord[]
+  createdAt                      DateTime                         @default(now())
+  updatedAt                      DateTime                         @updatedAt
+}
+
+// ユーザー個人の活動で行うスポーツ
+// model PersonalActivitySport {
+//   personalActivityId String
+//   personalActivity   PersonalActivity @relation(fields: [personalActivityId], references: [id])
+//   sportId            String
+//   sport              Sport            @relation(fields: [sportId], references: [id])
+//   createdAt          DateTime         @default(now())
+//   updatedAt          DateTime         @updatedAt
+
+//   @@id([personalActivityId, sportId])
+// }
+
+// ユーザー個人の活動で行うスポーツ属性
+model PersonalActivitySportAttribute {
+  personalActivityId String
+  personalActivity   PersonalActivity @relation(fields: [personalActivityId], references: [id])
+  sportAttributeId   String
+  sportAttribute     SportAttribute   @relation(fields: [sportAttributeId], references: [id])
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  @@id([personalActivityId, sportAttributeId])
+}
+
+// ユーザー個人の身体データ
+model PersonalBodyData {
+  id                     String            @id @default(uuid())
+  userId                 String
+  user                   User              @relation(fields: [userId], references: [id])
+  measurementDatetime    DateTime
+  description            String? // メモ
+  personalActivityId     String?
+  personalActivity       PersonalActivity?
+  weight                 Float?
+  height                 Float?
+  bodyFatMass            Float? // (kg)
+  bodyFatPercentage      Float? // %
+  bodyAge                Int?
+  consumedCalories       Int? // 消費カロリー。基礎代謝の方がいいか？
+  bodyWater              Float? // 体水分量 (L) 
+  proteinAmount          Float? // タンパク質量 (kg)
+  mineralAmount          Float? // ミネラル量 (kg) InBody
+  muscleAmount           Float? // 筋肉量 (kg) soft lean mass
+  // 部位別 (左右腕, 左右脚, 体幹) x 水分/脂肪/筋肉量
+  // 骨格筋指数
+  // 体水分均衡
+  // 細胞外水分比
+  // インピーダンス
+  // 除脂肪量
+  abdominalCircumference Float? // 腹囲
+  chestCircumference     Float? // 胸囲
+  waistCircumference     Float? // 胴囲
+  hipCircumference       Float? // 腰囲（ヒップ）
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
+}
+
+// 重さの単位enum
+enum WeightUnit {
+  KILOGRAM
+  YARD_POUND
+}
+
+// 距離の単位enum
+enum DistanceUnit {
+  METER
+  YARD_MILE
+}
+
+// ユーザー個人のワークアウトメニュー記録
+model PersonalActivityMenu {
+  id                    String                     @id @default(uuid())
+  name                  String
+  description           String
+  order                 Int
+  durationSeconds       Int?
+  setCount              Int?
+  repetitionCount       Int?
+  totalCount            Int?
+  weight                Float?
+  weightUnit            WeightUnit?
+  durationPerRep        Float? // TODO: いろんな計測単位を追加する
+  distance              Float?
+  distanceUnit          DistanceUnit?
+  workout               WorkoutAndDrillMenu?       @relation(fields: [workoutAndDrillMenuId], references: [id])
+  personalActivity      PersonalActivity?          @relation(fields: [personalActivityId], references: [id])
+  personalActivityId    String?
+  workoutAndDrillMenuId Int?
+  items                 PersonalActivityMenuItem[]
+  createdAt             DateTime                   @default(now())
+  updatedAt             DateTime                   @updatedAt
+}
+
+// ワークアウトのセット単位の詳細記録
+model PersonalActivityMenuItem {
+  id              String               @id @default(uuid())
+  description     String
+  menuId          String
+  menu            PersonalActivityMenu @relation(fields: [menuId], references: [id])
+  setNumber       Int?
+  repetitionCount Int?
+  weight          Float?
+  weightUnit      WeightUnit?
+  durationPerRep  Float? // TODO: いろんな計測単位を追加する
+  distance        Float?
+  distanceUnit    DistanceUnit?
+  durationSeconds Int?
+  intervalSeconds Int?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+}
+
+// 大会テーブル
+// TODO: 記録会やスクールなども考えると、名前はEventではなく大会に特化した方がいいかも。
+model Event {
+  id                 String             @id @default(uuid())
+  name               String
+  alias              String?
+  eventType          String? // 個人, チーム...?
+  description        String?
+  organizationId     String?
+  imageUrl           String?
+  entryCount         Int?
+  likeCount          Int?
+  startDatetime      DateTime
+  endDatetime        DateTime?
+  durationMinutes    Int?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  isDeleted          Boolean?           @default(false)
+  organization       Organization?      @relation(fields: [organizationId], references: [id])
+  entryPoints        EventEntryPoint[]
+  teamActivities     TeamActivity[]
+  personalActivities PersonalActivity[]
+  personalRecords    PersonalRecord[]
+  teamResults        TeamResult[]
+
+  PersonalResult PersonalResult[]
+}
+
+// 大会参加する対象の種別enum
+enum EntryTypeEnum {
+  Personal
+  Team
+}
+
+// EventEntryPointテーブル
+// 参加できる窓口。女子フルマラソン、男子フルマラソン、ハーフマラソン、キッズ5kmマラソン...とか。1つの大会で複数のエントリー。
+model EventEntryPoint {
+  id                 String                          @id @default(uuid())
+  name               String
+  description        String
+  entryType          EntryTypeEnum
+  entryRequirements  EventEntryRequirement[]
+  startDatetime      DateTime
+  endDatetime        DateTime?
+  durationMinutes    Int?
+  place              String?
+  price              Float?
+  maxAttendeeCount   Int?
+  allowTempTeam      Boolean                         @default(false) // 即席チームの参加を認めるか
+  createdAt          DateTime                        @default(now())
+  updatedAt          DateTime                        @updatedAt
+  eventId            String
+  event              Event                           @relation(fields: [eventId], references: [id])
+  personalEntries    PersonalEventEntry[]
+  teamEntries        TeamEventEntry[]
+  instantTeamEntries InstantTeamEventEntry[]
+  sports             EventEntryPointSport[]
+  sportAttributes    EventEntryPointSportAttribute[]
+}
+
+// 大会エントリーへの参加条件enum
+// TODO: bitwise?
+enum EventEntryRequirementType {
+  Gender // 性別
+  MinAge // 年齢 - 以上
+  MaxAge // 年齢 - 以下
+  MinSchoolGrade // 学年 - 以上
+  MaxSchoolGrade // 学年 - 以下
+  MinPlayerExperience // 競技経験 - 以上
+  MaxPlayerExperience // 競技経験 - 以下
+  Qualification // 必要参加資格
+  MinPoint // ポイント(?) - 以下
+  MaxPoint // ポイント(?) - 以上
+  MinRank // ランク(?) - 以下
+  MaxRank // ランク(?) - 以上
+  LivingArea // 在住エリア
+  WorkingArea // 在勤エリア
+  AffiliationCategory // 所属カテゴリー
+}
+
+// 大会参加エントリーへの参加条件
+model EventEntryRequirement {
+  id                String                    @id @default(uuid())
+  eventEntryPointId String
+  eventEntryPoint   EventEntryPoint           @relation(fields: [eventEntryPointId], references: [id])
+  type              EventEntryRequirementType
+  intValue          Int?
+  stringValue       String?
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
+}
+
+// 大会エントリーポイントの競技
+model EventEntryPointSport {
+  eventEntryPointId String
+  eventEntryPoint   EventEntryPoint @relation(fields: [eventEntryPointId], references: [id])
+  sportId           String
+  sport             Sport           @relation(fields: [sportId], references: [id])
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@id([eventEntryPointId, sportId])
+}
+
+// 大会エントリーポイントの競技属性
+model EventEntryPointSportAttribute {
+  eventEntryPointId String
+  eventEntryPoint   EventEntryPoint @relation(fields: [eventEntryPointId], references: [id])
+  sportAttributeId  String
+  sportAttribute    SportAttribute  @relation(fields: [sportAttributeId], references: [id])
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@id([eventEntryPointId, sportAttributeId])
+}
+
+// 大会への個人参加エントリー
+model PersonalEventEntry {
+  entryPointId    String
+  userId          String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  entryPoint      EventEntryPoint  @relation(fields: [entryPointId], references: [id])
+  user            User             @relation(fields: [userId], references: [id])
+  personalResults PersonalResult[]
+
+  @@id([userId, entryPointId])
+}
+
+// 大会へのチーム参加エントリー
+model TeamEventEntry {
+  entryPointId   String
+  teamId         String
+  teamActivityId String          @unique
+  teamActivity   TeamActivity    @relation(fields: [teamActivityId], references: [id])
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  entryPoint     EventEntryPoint @relation(fields: [entryPointId], references: [id])
+  team           Team            @relation(fields: [teamId], references: [id])
+  teamResults    TeamResult[]
+
+  @@id([teamId, entryPointId])
+}
+
+// 筋トレメニューマスター
+model WorkoutAndDrillMenu {
+  id                 Int                    @id @default(autoincrement())
+  name               String
+  alias              String
+  personalActivities PersonalActivityMenu[]
+  relatedSports      Sport[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Result(結果) と Record (記録) の関係
+// Result は試合の結果
+// Record は、競技の記録
+// 試合の順位はresult。
+// recordはresultに紐づく(オプション)
+// resultに複数のrecordを含められる
+// recordは練習とか非公式のも含む
+
+// 個人の大会・試合の結果テーブル。
+model PersonalResult {
+  id                        String                         @id @default(uuid())
+  userId                    String
+  user                      User                           @relation(fields: [userId], references: [id])
+  isHighlighted             Boolean
+  highlightDisplayOrder     Int?
+  createdAt                 DateTime                       @default(now())
+  updatedAt                 DateTime                       @updatedAt
+  isDeleted                 Boolean?                       @default(false)
+  eventId                   String?
+  event                     Event?                         @relation(fields: [eventId], references: [id])
+  personalEventEntryPointId String?
+  personalEventEntryUserId  String?
+  personalEventEntry        PersonalEventEntry?            @relation(fields: [personalEventEntryUserId, personalEventEntryPointId], references: [userId, entryPointId])
+  personalActivityId        String?
+  personalActivity          PersonalActivity?              @relation(fields: [personalActivityId], references: [id])
+  records                   PersonalRecord[]
+  sportId                   String
+  sport                     Sport                          @relation(fields: [sportId], references: [id])
+  sportAttributes           PersonalResultSportAttribute[]
+  posts                     UserPost[]
+  formatVersion             Int // detail JSON と sport, sportAttributes を考慮した format version
+  detailsJson               String?                        @db.Text
+}
+
+// 
+model PersonalResultSportAttribute {
+  personalResultId String
+  personalResult   PersonalResult @relation(fields: [personalResultId], references: [id])
+  sportAttributeId String
+  sportAttribute   SportAttribute @relation(fields: [sportAttributeId], references: [id])
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@id([personalResultId, sportAttributeId])
+}
+
+enum RecordCriteria {
+  Distance
+  Height
+  Speed
+  Weight
+  TimeLongerIsBetter
+  TimeShorterIsBetter
+  Time // ランニングなどで使う。通常は Distance と併用して、Speed を求めるなど。
+  CountMoreIsBetter
+  CountLessIsBetter
+  PointScore
+  Index
+  Percentage
+}
+
+enum RecordUnitType {
+  Centimeter
+  Meter
+  Kilometer
+  KmPerHour
+  KgAndCount
+  Kilogram
+  Time
+  Millisecond
+  None
+  Point
+  Times
+  Balls
+  Shots
+  Percent
+}
+
+// 国際単位系でやるべき
+// https://ja.wikipedia.org/wiki/%E5%9B%BD%E9%9A%9B%E5%8D%98%E4%BD%8D%E7%B3%BB
+model RecordMaster {
+  id                  String           @id
+  name                String           @unique
+  nameJa              String           @unique
+  criteria            RecordCriteria[] @default([])
+  unitValue           RecordUnitType   @default(None) // 同じ距離基準でも、kmが使われる記録とmeterが使われる記録があるため。
+  // TODO: Meter <=> Mileの変換はユーザー側で。DB schemaでは、あくまで大枠。
+  // TODO: 分類はi18nで呼称に違いがある。バスケシュート回数 => 日本語は"本", 英語は shotsになるなど複雑になるため、
+  // TODO: i18n側の責務で行う。
+  isAccumulative      Boolean          @default(false)
+  isTeamRecord        Boolean          @default(false)
+  canbeFocusIndex     Boolean          @default(false)
+  isNotCompetitive    Boolean          @default(false)
+  hasSportCompetition Boolean          @default(false)
+  minValue            Float? // 記録の入力最小値 (i18nの単位によるが)
+  maxValue            Float? // 記録の入力最大値 (i18nの単位によるが)
+  emoji               String?
+  standardValue       Float? // 値が何も表示されていない、または単一数値しかない場合にグラフの基準値として持つ。
+  standardValueMargin Float? // 値がない or 値が一つしかない場合の、グラフでの上限下限の範囲を定める差分の絶対値。単位は unitValue。または minValueが下限, maxValueが上限 でもある。
+  unitValueSteps      Float? // 数値入力の単位。1, 0.1, 0.01など。
+  personalRecords     PersonalRecord[]
+  userFocuses         UserFocus[]
+}
+
+// TODO: 
+// 記録をひとまとめにする単位
+// 例えば槍投げの大会の中で、複数の試投があり、それら記録をまとめたい場合に使う。
+model RecordCollection {
+  id String @id @default(uuid())
+}
+
+// 個人の個々の記録テーブル
+model PersonalRecord {
+  id                             String                         @id @default(uuid())
+  userId                         String
+  isHighlighted                  Boolean // プロフィールページにピン留めして載せるか => TODO: Highlightの RecordIdと順序を持つテーブルに切り出したほうが良いかも。
+  highlightDisplayOrder          Int? // ハイライトする場合の表示順
+  recordCategory                 String? // 
+  recordCategoryDetail           String? // 
+  recordTarget                   String? // 
+  recordValue                    Float // 単一記録の数値
+  displayType                    String?
+  recordDatetime                 DateTime
+  summary                        String?
+  media                          String?
+  resultId                       String?
+  eventId                        String?
+  personalActivityId             String?
+  formatVersion                  Int // 記録のフォーマットのバージョン番号 (後方互換対策)
+  detail                         String?                        @db.Text() // 本文(たぶんJSON)
+  createdAt                      DateTime                       @default(now())
+  updatedAt                      DateTime                       @updatedAt
+  isDeleted                      Boolean?                       @default(false)
+  user                           User                           @relation(fields: [userId], references: [id])
+  recordMaster                   RecordMaster                   @relation(fields: [recordMasterId], references: [id])
+  recordMasterId                 String
+  personalActivity               PersonalActivity?              @relation(fields: [personalActivityId], references: [id])
+  personalRecordSports           PersonalRecordSport[]
+  personalRecordSportAttributes  PersonalRecordSportAttribute[]
+  result                         PersonalResult?                @relation(fields: [resultId], references: [id])
+  event                          Event?                         @relation(fields: [eventId], references: [id])
+  personalEventEntryUserId       String?
+  personalEventEntryEntryPointId String?
+  posts                          UserPost[]
+}
+
+// 個人の記録のスポーツ
+// TODO: record master につければいいかも。
+model PersonalRecordSport {
+  personalRecordId String
+  personalRecord   PersonalRecord @relation(fields: [personalRecordId], references: [id])
+  sportId          String
+  sport            Sport          @relation(fields: [sportId], references: [id])
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@id([personalRecordId, sportId])
+}
+
+// 個人の記録のスポーツ属性
+// TODO: record master につければいいかも。
+model PersonalRecordSportAttribute {
+  personalRecordId String
+  personalRecord   PersonalRecord @relation(fields: [personalRecordId], references: [id])
+  sportAttributeId String
+  sportAttribute   SportAttribute @relation(fields: [sportAttributeId], references: [id])
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@id([personalRecordId, sportAttributeId])
+}
+
+// 記録のマイルストーンを管理するテーブル
+// 3番目にはやい記録ですなど。
+// TODO: ユーザーの記録と紐づける。
+model PersonalRecordMilestoneMaster {
+  id String @id @default(uuid())
+}
+
+enum UserPostVisibility {
+  PRIVATE
+  CONNECTIONS
+  PUBLIC
+}
+
+// ユーザー投稿。フィードなどで使われる。
+model UserPost {
+  id                 String             @id @default(uuid())
+  userId             String
+  visibility         UserPostVisibility @default(PRIVATE) // 公開範囲の設定
+  textForSearch      String             @db.Text() // 検索用の文字列
+  body               String             @db.Text() // 本文(たぶんJSON)
+  summaryJson        String // 関連する Activity や Result などの情報をまとめて載せておく
+  user               User               @relation(fields: [userId], references: [id])
+  isDeleted          Boolean?           @default(false)
+  personalActivityId String?
+  personalActivity   PersonalActivity?  @relation(fields: [personalActivityId], references: [id])
+  personalRecordId   String?
+  personalRecord     PersonalRecord?    @relation(fields: [personalRecordId], references: [id])
+  personalResultId   String?
+  personalResult     PersonalResult?    @relation(fields: [personalResultId], references: [id])
+  // TODO: TeamResult, TeamActivity, TeamRecord, 
+  // TODO: PersonalEventEntry, TeamEventEntry
+  likes              UserPostLike[]
+  comments           UserPostComment[]
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+}
+
+// ユーザー投稿へのいいね
+model UserPostLike {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  userPostId String
+  userPost   UserPost @relation(fields: [userPostId], references: [id])
+  isLiked    Boolean
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ユーザー投稿へのコメント
+model UserPostComment {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  userPostId String
+  userPost   UserPost @relation(fields: [userPostId], references: [id])
+  comment    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+enum TeamPostVisibility {
+  INTERNAL
+  PUBLIC
+}
+
+// チーム投稿。フィードなどで使われる。
+// 動画、画像の投稿、予定の作成、予定の変更、試合結果の共有などが投稿化される。
+model TeamPost {
+  id             String             @id @default(uuid())
+  teamId         String
+  visibility     TeamPostVisibility @default(INTERNAL) // 公開範囲の設定
+  textForSearch  String             @db.Text() // 検索用の文字列
+  body           String             @db.Text() // 本文(たぶんJSON)
+  summaryJson    String // 関連する Activity や Result などの情報をまとめて載せておく
+  team           Team               @relation(fields: [teamId], references: [id])
+  isDeleted      Boolean?           @default(false)
+  teamActivityId String?
+  teamActivity   TeamActivity?      @relation(fields: [teamActivityId], references: [id])
+  teamResultId   String?
+  teamResult     TeamResult?        @relation(fields: [teamResultId], references: [id])
+  postedById     String
+  postedBy       User               @relation(fields: [postedById], references: [id])
+  likes          TeamPostLike[]
+  comments       TeamPostComment[]
+  postedAt       DateTime           @default(now()) // TODO: createdAt と何が違う？
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+}
+
+// チーム投稿へのいいね
+model TeamPostLike {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  teamPostId String
+  teamPost   TeamPost @relation(fields: [teamPostId], references: [id])
+  isLiked    Boolean
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ユーザー投稿へのコメント
+model TeamPostComment {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  teamPostId String
+  teamPost   TeamPost @relation(fields: [teamPostId], references: [id])
+  comment    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// チームの大会結果テーブル
+model TeamResult {
+  id                         String                     @id @default(uuid())
+  teamId                     String?
+  isHighlighted              Boolean
+  highlightDisplayOrder      Int?
+  recordCategory             String
+  recordCategoryDetail       String
+  recordTarget               String
+  recordDatetime             DateTime
+  displayType                String
+  summary                    String
+  media                      String?
+  createdAt                  DateTime                   @default(now())
+  updatedAt                  DateTime                   @updatedAt
+  isDeleted                  Boolean?                   @default(false)
+  teamEventEntry             TeamEventEntry             @relation(fields: [teamEventEntryTeamId, teamEventEntryEntryPointId], references: [teamId, entryPointId])
+  teamActivity               TeamActivity               @relation(fields: [teamActivityId], references: [id])
+  sports                     TeamResultSport[]
+  sportAttributes            TeamResultSportAttribute[]
+  event                      Event?                     @relation(fields: [eventId], references: [id])
+  eventId                    String?
+  teamEventEntryTeamId       String
+  teamEventEntryEntryPointId String
+  teamActivityId             String
+  formatVersion              Int // detail JSON と sports, sportAttributes を考慮した format version
+  detailsJson                String?                    @db.Text
+  posts                      TeamPost[]
+}
+
+// チームの大会結果のスポーツ
+model TeamResultSport {
+  name         String
+  teamResultId String
+  teamResult   TeamResult @relation(fields: [teamResultId], references: [id])
+  sportId      String
+  sport        Sport      @relation(fields: [sportId], references: [id])
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@id([teamResultId, sportId])
+}
+
+// チームの大会結果のスポーツ属性
+model TeamResultSportAttribute {
+  name             String
+  teamResultId     String
+  teamResult       TeamResult     @relation(fields: [teamResultId], references: [id])
+  sportAttributeId String
+  sportAttribute   SportAttribute @relation(fields: [sportAttributeId], references: [id])
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@id([teamResultId, sportAttributeId])
+}
+
+// 大会出場用の一時的な即席チーム。参加は招待制。
+// 友達同士やOBチームなど普段同じチームではないチームで出る際に使う。
+// 活動は作成できない。検索できない。メニューなどに表示されない。
+// 大会成績を見れる人 = メンバー一覧を見れる人
+model InstantTeam {
+  id           String                  @id @default(uuid())
+  name         String
+  description  String
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+  isDeleted    Boolean?                @default(false)
+  members      InstantTeamMember[]
+  chatChannels InstantTeamChatPost[]
+  eventEntries InstantTeamEventEntry[]
+}
+
+// 即席チームメンバー
+model InstantTeamMember {
+  id            String      @id @default(uuid())
+  instantTeam   InstantTeam @relation(fields: [instantTeamId], references: [id])
+  instantTeamId String
+  user          User        @relation(fields: [userId], references: [id])
+  userId        String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+// 即席チームチャット投稿
+model InstantTeamChatPost {
+  id            String       @id @default(uuid())
+  instantTeam   InstantTeam? @relation(fields: [instantTeamId], references: [id])
+  instantTeamId String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+// 即席チームの大会エントリー
+model InstantTeamEventEntry {
+  id                String          @id @default(uuid())
+  instantTeam       InstantTeam     @relation(fields: [instantTeamId], references: [id])
+  instantTeamId     String
+  eventEntryPoint   EventEntryPoint @relation(fields: [eventEntryPointId], references: [id])
+  eventEntryPointId String
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+}
+
+// 写真や動画
+// TODO : ちゃんと設計する
+model Media {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ユーザーへの通知
+// TODO : ちゃんと設計する
+model UserNotification {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 個人活動のサマリー。複数の活動の結果をまとめて表示できる。同じ種類の活動や、異なる種類の活動も。
+// 用途は投稿用や、グラフ表示用。
+// パフォーマンス改善のために、まとめてJSON形式などで記録しておく。
+// TODO: 本番ではredisなどに移す。dev用の一時的なテーブル
+model TempPersonalActivitySummary {
+  id     Int    @id @default(autoincrement())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+  data   String @db.Text() // 本文(たぶんJSON)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ユーザーがフォーカスしている数値など。
+// アプリを開いて最上部に表示する。
+// TODO: 本番ではredisなどに移す。dev用の一時的なテーブル
+
+enum UserFocusValueType {
+  LatestValue
+  BestValue
+  AverageValue
+  AverageValueInYear
+  TimesDone
+  CompoundBest // スクワット 1RM の最高値など
+  CompoundAverage // スクワット 10RM の平均値など
+  CompoundLatest // スクワット 実施回数 の最新値など
+}
+
+model UserFocus {
+  userId         String
+  user           User               @relation(fields: [userId], references: [id])
+  recordMasterId String
+  recordMaster   RecordMaster       @relation(fields: [recordMasterId], references: [id])
+  displayOrder   Int
+  value          Float?
+  valueType      UserFocusValueType @default(LatestValue)
+  valueDatetime  DateTime?
+  data           Json? // 表示内容
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  @@id([userId, recordMasterId])
+}
+
+// model VolleyballGame {
+//   id                     String @id @default(uuid())
+//   teamHome
+//   teamMembersHome
+//   teamAway
+//   teamMembersAway
+//   referees
+//   scheduledStartDatetime // 予定の開始時間
+//   scheduledEndDatetime // 予定の終了時間
+//   actualStartDatetime // 実際の開始時間
+//   actualEndDatetime // 実際の終了時間
+//   place // 体育館名
+//   placeDetail // コート番号など
+//   competitionId // 大会ID
+//   gameOrder // 試合順
+//   winnerGoes // 次戦あれば
+//   loserGoes // 次戦あれば
+//   winnerPlacementTitle // 順位や称号がこの試合で決まれば
+//   sets // セットデータ
+//   videos // 動画
+//   photos // 
+//   records_awards // MVP, Man of the match, 得点王, ディグ率など
+//   homeTeamSetCount // セットカウント まとめ用
+//   awayTeamSetCount // セットカウント まとめ用
+//   gameStatus // 未開催、試合中、確定、審議中、キャンセル、無効、棄権、没収
+// }
+
+// model VolleyballGameSet {
+//   id                 String @id @default(uuid())
+//   gameId
+//   setCount // 
+//   takenTeam // セットを取ったチーム
+//   homeTeamScore // 0-25
+//   awayTeamScore // 0-25
+//   setStatus // 未開催、試合中、確定、審議中、キャンセル、無効
+//   points
+//   events // 交代、タイムアウト
+//   videos // 動画
+//   photos // 
+//   oncourtMembersHome
+//   oncourtMembersAway
+// }
+// model VolleyballGameEvent {
+//   id        String @id @default(uuid())
+//   gameId
+//   setId
+//   eventType // 交代, タイムアウト, イエローカード, レフェリータイム, 
+// }
+
+// model VolleyballGamePoint {
+//   id     String @id @default(uuid())
+//   gameId
+//   setId
+//   reason // 得点要因
+//   plays // サーバー、レシーブ、レシーブ結果、トス、攻撃種類、ブロッカー、結果、ディグ、
+//   videos // 動画
+//   photos // 
+// }
+
+// // チームの成績サマリー
+// model VolleyballGamePlayerSummary {
+//   id
+//   gameId
+//   teamId
+//   spikeAttempts
+//   spikeMade
+//   blocksMade
+//   serveAces
+
+//   averageBlockersPerSpike // スパイクに対するブロック枚数
+// }
+
+// // 個人の成績などのサマリー
+// model VolleyballGamePlayerSummary {
+//   id
+//   userId
+//   spikeAttemptCount
+//   spikeMadeCount
+//   spikeMisses
+
+//   blockMade
+//   blockTouched
+//   blockMissed
+
+//   serviceReceiveCount
+//   averageBlockers
+//   serviceAces
+//   serviceMisses
+// }

@@ -1,7 +1,13 @@
 .DS_Store
 .env
+.env.*
 /node_modules/
 
 # React Router
 /.react-router/
 /build/
+
+# Prisma
+/prisma/dev.db
+
+/@prisma/client
