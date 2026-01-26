@@ -1,6 +1,6 @@
 import {
   Form,
-  LoaderFunctionArgs,
+  type LoaderFunctionArgs,
   redirect,
   useLoaderData,
 } from "react-router";

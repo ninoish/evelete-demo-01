@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from "react-router";
-import { json, useLoaderData } from "react-router";
+import { useLoaderData } from "react-router";
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   return Response.json({ sport: params.sportId });

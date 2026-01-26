@@ -103,7 +103,7 @@ export default function TeamActivityAttendeesRoute() {
       <form method="post">
         <label>
           <span>コメント</span>
-          <inpu type="text" required name="comment" />
+          <input type="text" required name="comment" />
           <button type="submit">投稿</button>
         </label>
       </form>

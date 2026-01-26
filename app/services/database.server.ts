@@ -1,6 +1,5 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import type { PrismaClient } from "@prisma/client";
-import pg from "pg";
+import { PrismaClient } from "@prisma/client";
 
 // グローバル変数に型をつけて保持（Workersでも可）
 declare global {

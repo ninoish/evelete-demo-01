@@ -1,8 +1,8 @@
-import { useForm, SubmitHandler } from "react-hook-form";
-import {
-  type AffiliationCategory,
-  type Sport,
-  type SportAttribute,
+import { useForm } from "react-hook-form";
+import type {
+   AffiliationCategory,
+   Sport,
+   SportAttribute,
 } from "@prisma/client";
 import { useFetcher } from "react-router";
 import { useEffect, useState } from "react";

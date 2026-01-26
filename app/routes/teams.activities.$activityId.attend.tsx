@@ -1,4 +1,4 @@
-import { type LoaderFunctionArgs, json } from "react-router";
+import type { LoaderFunctionArgs } from "react-router";
 import { Form, useLoaderData } from "react-router";
 import { getPrisma } from "~/services/database.server";
 

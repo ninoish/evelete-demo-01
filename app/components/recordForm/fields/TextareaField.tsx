@@ -1,5 +1,4 @@
-import { AnyFieldApi } from "@tanstack/react-form";
-import { useFieldContext } from "~/components/recordForm/hooks/form";
+import type { AnyFieldApi } from "@tanstack/react-form";
 
 export interface FieldProps {
   label: string;

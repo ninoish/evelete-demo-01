@@ -1,9 +1,8 @@
 import {
   data,
   Link,
-  LoaderFunctionArgs,
+  type LoaderFunctionArgs,
   Outlet,
-  redirect,
   useLoaderData,
 } from "react-router";
 import MainLayout from "~/layouts/MainLayout";

@@ -1,5 +1,4 @@
-import type { Sport } from "@prisma/client";
-import { TeamFormPlaces } from "~/routes/new.team";
+import type { TeamFormPlaces } from "~/routes/new.team";
 import { getPrisma } from "~/services/database.server";
 
 const generateRandomString = (length: number) => {

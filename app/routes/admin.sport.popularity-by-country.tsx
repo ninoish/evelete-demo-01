@@ -1,11 +1,9 @@
-import {
+import type {
   Country,
   Prisma,
-  Sport,
-  SportPopularityByCountry,
 } from "@prisma/client";
 import {
-  ActionFunctionArgs,
+  type ActionFunctionArgs,
   redirect,
   useLoaderData,
   type LoaderFunctionArgs,

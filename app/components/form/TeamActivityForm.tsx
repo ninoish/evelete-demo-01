@@ -1,28 +1,25 @@
 import {
   BiologicalGender,
-  Sport,
-  SportAttribute,
+  type Sport,
+  type SportAttribute,
   TeamActivityPaymentMethod,
   TeamActivityStatus,
   TeamActivityType,
-  TeamGroup,
+  type TeamGroup,
   type Prisma,
   type TeamActivity,
 } from "@prisma/client";
 import dayjs from "dayjs";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import {
   Form,
   Link,
-  useBeforeUnload,
   useBlocker,
-  useSubmit,
 } from "react-router";
 import * as z from "zod";
 import useGoogleMapsLoader from "~/hooks/useGoogleMapsLoader";
 import { intSchema } from "~/utils/validator";
-import SportSelect from "../input/SportSelect";
 import TeamSportSelect from "../input/TeamSportSelect";
 import { AdjustableRange } from "../input/AdjustableRange";
 
