@@ -57,14 +57,14 @@ export default function PersonalActivityListItem({
       {personalRecords?.length > 0 ? (
         <div>
           <ul>
-          {personalRecords.map((pr) => {
-            return (
-              <li key={pr.id}>
-                <h4>{pr.recordMaster.nameJa}</h4>
-                <h3>{pr.recordValue}</h3>
-              </li>
-            );
-          })}
+            {personalRecords.map((pr) => {
+              return (
+                <li key={pr.id}>
+                  <h4>{pr.recordMaster.nameJa}</h4>
+                  <h3>{pr.recordValue}</h3>
+                </li>
+              );
+            })}
           </ul>
         </div>
       ) : null}

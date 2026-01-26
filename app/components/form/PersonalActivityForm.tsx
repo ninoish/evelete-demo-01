@@ -1,7 +1,4 @@
-import {
-  createFormHook,
-  createFormHookContexts
-} from "@tanstack/react-form";
+import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
 import { Form, useSubmit } from "react-router";
 
 import type { PersonalActivityForm } from "~/types/personalActivity";

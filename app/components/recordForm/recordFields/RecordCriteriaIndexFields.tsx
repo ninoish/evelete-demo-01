@@ -1,11 +1,13 @@
 import type { RecordMaster } from "@prisma/client";
-import { ReactFormExtendedApi } from "@tanstack/react-form";
+import type { ReactFormExtendedApi } from "@tanstack/react-form";
 import { convertUnitValueToUnitDisplay } from "~/utils/unitConverter";
 
 type CriteriaField = ReactFormExtendedApi<
   {
     recordValue: number;
   },
+  any,
+  any,
   any,
   any,
   any,

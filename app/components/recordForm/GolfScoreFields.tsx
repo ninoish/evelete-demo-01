@@ -1,6 +1,5 @@
 import { NumberField } from "~/components/recordForm/fields/NumberField";
-import { TextField } from "~/components/recordForm/fields/TextField";
-import { ReactFormExtendedApi } from "@tanstack/react-form";
+import type { ReactFormExtendedApi } from "@tanstack/react-form";
 
 type GolfFormApi = ReactFormExtendedApi<
   {
@@ -14,6 +13,8 @@ type GolfFormApi = ReactFormExtendedApi<
       userScore: number;
     }>;
   },
+  any,
+  any,
   any,
   any,
   any,

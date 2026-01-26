@@ -1,5 +1,5 @@
-import type {
-  TeamActivity,
+import {
+  type TeamActivity,
   TeamActivityAttendanceResponseType,
 } from "@prisma/client";
 import { useEffect, useState } from "react";

@@ -1,9 +1,10 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client";
+import prismaPkg from "@prisma/client";
+const { PrismaClient } = prismaPkg;
 
 // グローバル変数に型をつけて保持（Workersでも可）
 declare global {
-  var _prisma: PrismaClient | undefined;
+  var _prisma: typeof PrismaClient | undefined;
 }
 
 export const getPrisma = () => {

@@ -1,13 +1,13 @@
 import {
   PersonalActivityType,
   PersonalActivityVisibility,
-  TeamActivity,
+  type TeamActivity,
   TeamActivityAttendanceResponseType,
   TeamActivityPaymentMethod,
   TeamActivityType,
   TeamActivityVisibility,
 } from "@prisma/client";
-import { NewTeamActivityFormData } from "~/components/form/TeamActivityForm";
+import type { NewTeamActivityFormData } from "~/components/form/TeamActivityForm";
 import { AttendeeResponseState } from "~/models/teamActivityModel";
 import { getPrisma } from "~/services/database.server";
 import { dateFromString, now } from "~/utils/datetime";

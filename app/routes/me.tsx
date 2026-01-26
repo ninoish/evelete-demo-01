@@ -24,7 +24,6 @@ export default function MeLayoutRoute() {
   const { me } = data;
 
   return (
-    
     <MeLayout me={me}>
       <Outlet />
     </MeLayout>

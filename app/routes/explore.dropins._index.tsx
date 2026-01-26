@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs } from "react-router";
+import type { LoaderFunctionArgs } from "react-router";
 import { Link, useLoaderData } from "react-router";
 
 import { Auth } from "~/services/auth.server";
@@ -98,7 +98,10 @@ export default function ExploreTeamActivitiesIndexRoute() {
       <ul className="flex flex-col md:flex-row md:flex-wrap gap-x-2 gap-y-4">
         {teamActivities.map((ta) => {
           return (
-            <li key={ta.id} className="block items-stretch w-full md:w-auto max-w-full">
+            <li
+              key={ta.id}
+              className="block items-stretch w-full md:w-auto max-w-full"
+            >
               <DropInListItem ta={ta} />
             </li>
           );

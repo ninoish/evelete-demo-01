@@ -34,13 +34,15 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: evelete-app
+    env_file:
+      - .env
     environment:
       NODE_ENV: development
       DIRECT_URL: "${DIRECT_URL:-postgresql://postgres:postgres@db:5432/evelete}"
       DATABASE_URL: "${DATABASE_URL:-postgresql://postgres:postgres@db:5432/evelete}"
       REDIS_URL: "${REDIS_URL:-redis://redis:6379}"
       AUTH_SESSION_SECRET: "${AUTH_SESSION_SECRET:-dev-secret-change-in-production}"
-      GOOGLE_AUTH_CALLBACK_URL: "${GOOGLE_AUTH_CALLBACK_URL:-}"
+      CLIENT_URL: "${CLIENT_URL:-}"
       GOOGLE_CLIENT_ID: "${GOOGLE_CLIENT_ID:-}"
       GOOGLE_CLIENT_SECRET: "${GOOGLE_CLIENT_SECRET:-}"
       OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
@@ -57,6 +59,49 @@ services:
       redis:
         condition: service_healthy
     restart: unless-stopped
+
+  app-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dependencies  # devDependencies 入り
+    container_name: evelete-app-dev
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      DIRECT_URL: "${DIRECT_URL:-postgresql://postgres:postgres@db:5432/evelete}"
+      DATABASE_URL: "${DATABASE_URL:-postgresql://postgres:postgres@db:5432/evelete}"
+      REDIS_URL: "${REDIS_URL:-redis://redis:6379}"
+      AUTH_SESSION_SECRET: "${AUTH_SESSION_SECRET:-dev-secret-change-in-production}"
+      CLIENT_URL: "${CLIENT_URL:-}"
+      GOOGLE_CLIENT_ID: "${GOOGLE_CLIENT_ID:-}"
+      GOOGLE_CLIENT_SECRET: "${GOOGLE_CLIENT_SECRET:-}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+      GOOGLE_MAPS_API_KEY: "${GOOGLE_MAPS_API_KEY:-}"
+      CF_ACCOUNT_ID: "${CF_ACCOUNT_ID:-}"
+      CF_IMAGES_STREAM_API_KEY: "${CF_IMAGES_STREAM_API_KEY:-}"
+      CF_IMAGES_ACCOUNT_HASH: "${CF_IMAGES_ACCOUNT_HASH:-}"
+      PORT: 3001
+      # 監視が効かない環境向け（Mac/WSLで必要になることが多い）
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+    ports:
+      - "3001:3001"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+    # ✅ ローカルソースをコンテナに反映
+    volumes:
+      - .:/app
+      # ✅ node_modules はコンテナ側に隔離（ホストと混ぜない）
+      - /app/node_modules
+
+    # 初回に generate/migrate して dev server 起動（必要に応じて調整）
+    command: sh -c "npm ci && npx prisma generate && npx prisma migrate deploy && npm run dev -- --host 0.0.0.0 --port 3001"
 
 volumes:
   pgdata:

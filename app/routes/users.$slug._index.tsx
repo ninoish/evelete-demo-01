@@ -1,5 +1,5 @@
 import { FaComment, FaHeart } from "react-icons/fa";
-import { data, LoaderFunctionArgs, useLoaderData } from "react-router";
+import { data, type LoaderFunctionArgs, useLoaderData } from "react-router";
 import ActivityGraph from "~/components/ActivityGraph";
 import { Auth } from "~/services/auth.server";
 import personalActivityServer from "~/services/personalActivity.server";

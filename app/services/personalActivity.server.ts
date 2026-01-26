@@ -61,21 +61,19 @@ const getById = async (personalActivityId: string, userId: string | null) => {
     include: {
       personalRecords: {
         include: {
-          recordMaster: true
-        }
+          recordMaster: true,
+        },
       },
       personalResults: {
-        include: {
-          
-        }
+        include: {},
       },
-    bodyData: true,
-    event: true,
-    sport: true,
-    sportAttributes: true,
-    teamActivityAttendanceResponse: true,
-    menus: true,
-    }
+      bodyData: true,
+      event: true,
+      sport: true,
+      sportAttributes: true,
+      teamActivityAttendanceResponse: true,
+      menus: true,
+    },
   });
   return activity;
 };

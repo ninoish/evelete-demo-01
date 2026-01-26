@@ -15,7 +15,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     params.activityId,
     user?.id ?? null,
   );
-  
+
   if (!activity) {
     throw data({ errorMessage: "Activity Not Found" }, { status: 404 });
   }

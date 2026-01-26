@@ -77,8 +77,8 @@ export const getPersonalRecordDefaultValues = (recordMaster: RecordMaster) => {
   }
   const now = dayjs();
   return {
-    recordDate: now.format('YYYY-MM-DD'),
-    recordTime: now.format('HH:mm'),
+    recordDate: now.format("YYYY-MM-DD"),
+    recordTime: now.format("HH:mm"),
     place: { name: "" },
     comment: undefined,
     recordValue: undefined,

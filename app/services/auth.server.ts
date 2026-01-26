@@ -20,16 +20,16 @@ export class Auth {
       AUTH_SESSION_SECRET,
       GOOGLE_CLIENT_ID,
       GOOGLE_CLIENT_SECRET,
-      GOOGLE_AUTH_CALLBACK_URL,
+      CLIENT_URL,
     } = process.env;
 
     if (!AUTH_SESSION_SECRET) {
       throw new Error("AUTH_SESSION_SECRET is not defined");
     }
 
-    if (!(GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET && GOOGLE_AUTH_CALLBACK_URL)) {
+    if (!(GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET && CLIENT_URL)) {
       throw new Error(
-        "GOOGLE_CLIENT_ID、GOOGLE_CLIENT_SECRET、GOOGLE_AUTH_CALLBACK_URLが設定されていません。",
+        "GOOGLE_CLIENT_ID、GOOGLE_CLIENT_SECRET、CLIENT_URLが設定されていません。",
       );
     }
 
@@ -100,7 +100,7 @@ export class Auth {
       {
         clientId: GOOGLE_CLIENT_ID || "",
         clientSecret: GOOGLE_CLIENT_SECRET || "",
-        redirectURI: `${GOOGLE_AUTH_CALLBACK_URL}`,
+        redirectURI: `${CLIENT_URL}/auth/google/callback`,
       },
       async ({ tokens }) => {
         const profile = await GoogleStrategy.userProfile(tokens);

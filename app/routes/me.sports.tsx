@@ -23,8 +23,8 @@ export default function MySportsRoute() {
       <h1>My sports</h1>
 
       <div>
-        {data.me.sports.map(sp => {
-          return <div key={sp.sportId}>{sp.sportId}</div>
+        {data.me.sports.map((sp) => {
+          return <div key={sp.sportId}>{sp.sportId}</div>;
         })}
       </div>
 

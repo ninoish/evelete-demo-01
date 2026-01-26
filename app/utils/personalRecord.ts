@@ -28,10 +28,10 @@ export const convertCriteriaToUnit = (criteria: RecordCriteria) => {
 
 export const shouldUpdateFocus = (
   focus: Prisma.UserFocusGetPayload<{
-  include: {
-    recordMaster: true
-  };
-}>,
+    include: {
+      recordMaster: true;
+    };
+  }>,
   recordDatetime: Date,
   recordValue: number,
 ) => {

@@ -140,7 +140,6 @@ export default function MyBodyDataIndexRoute() {
   // 7) プロット用データ
   const fatOnWeight = fatRaw.map((d) => ({ x: d.x, y: mapFatToWeight(d.y) }));
 
-
   return (
     <div>
       <div className="py-2 px-4 flex justify-center md:justify-end">
@@ -195,8 +194,7 @@ export default function MyBodyDataIndexRoute() {
               data={weightRaw}
               size={2}
               style={{ data: { fill: CHART_BLUE } }}
-              labels={({ index, datum }) => `${datum.y}kg`
-              }
+              labels={({ index, datum }) => `${datum.y}kg`}
               labelComponent={
                 <VictoryLabel
                   renderInPortal={false}
@@ -213,8 +211,7 @@ export default function MyBodyDataIndexRoute() {
               data={fatOnWeight}
               size={2}
               style={{ data: { fill: CHART_RED } }}
-              labels={({ index }) => `${fatRaw[index!].y}%`
-              }
+              labels={({ index }) => `${fatRaw[index!].y}%`}
               labelComponent={
                 <VictoryLabel
                   renderInPortal={false}
@@ -234,13 +231,12 @@ export default function MyBodyDataIndexRoute() {
       <div className="px-2 max-w-4xl mx-auto">
         <ul className="flex flex-col gap-2">
           {bodyData?.map((data) => {
-
             let dateStr = convertDateToRelativeDate(
-                      toJST(date(data.measurementDatetime)),
+              toJST(date(data.measurementDatetime)),
             );
-                    if(dateStr === "0h") {
-                      dateStr = "たった今";
-                    }
+            if (dateStr === "0h") {
+              dateStr = "たった今";
+            }
 
             return (
               <li key={data.id} className="w-full p-4 border-b">

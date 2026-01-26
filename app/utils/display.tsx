@@ -1,5 +1,5 @@
 import { PersonalActivityType, TeamActivityType } from "@prisma/client";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs, { type Dayjs } from "dayjs";
 
 export const convertDateToRelativeDate = (date: Dayjs) => {
   const today = dayjs();
@@ -29,13 +29,17 @@ export const displayTeamActivityType = (type: TeamActivityType) => {
   switch (type) {
     case TeamActivityType.PRACTICE: {
       return (
-        <span className="whitespace-nowrap py-1 px-2 bg-blue-800 text-white rounded">練習</span>
+        <span className="whitespace-nowrap py-1 px-2 bg-blue-800 text-white rounded">
+          練習
+        </span>
       );
     }
 
     case TeamActivityType.COMPETITION: {
       return (
-        <span className="whitespace-nowrap py-1 px-2 bg-red-800 text-white rounded">大会</span>
+        <span className="whitespace-nowrap py-1 px-2 bg-red-800 text-white rounded">
+          大会
+        </span>
       );
     }
     case TeamActivityType.EVENT: {
@@ -54,12 +58,16 @@ export const displayTeamActivityType = (type: TeamActivityType) => {
     }
     case TeamActivityType.RECORD: {
       return (
-        <span className="whitespace-nowrap py-1 px-2 bg-orange-800 text-white rounded">記録</span>
+        <span className="whitespace-nowrap py-1 px-2 bg-orange-800 text-white rounded">
+          記録
+        </span>
       );
     }
     case TeamActivityType.RESULT: {
       return (
-        <span className="whitespace-nowrap py-1 px-2 bg-purple-800 text-white rounded">記録</span>
+        <span className="whitespace-nowrap py-1 px-2 bg-purple-800 text-white rounded">
+          記録
+        </span>
       );
     }
   }
@@ -70,13 +78,17 @@ export const displayPersonalActivityType = (type: PersonalActivityType) => {
   switch (type) {
     case PersonalActivityType.PRACTICE: {
       return (
-        <span className="whitespace-nowrap py-1 px-2 bg-blue-800 text-white rounded">練習</span>
+        <span className="whitespace-nowrap py-1 px-2 bg-blue-800 text-white rounded">
+          練習
+        </span>
       );
     }
 
     case PersonalActivityType.COMPETITION: {
       return (
-        <span className="whitespace-nowrap py-1 px-2 bg-red-800 text-white rounded">大会</span>
+        <span className="whitespace-nowrap py-1 px-2 bg-red-800 text-white rounded">
+          大会
+        </span>
       );
     }
     case PersonalActivityType.TEAM_EVENT: {
@@ -95,71 +107,92 @@ export const displayPersonalActivityType = (type: PersonalActivityType) => {
     }
     case PersonalActivityType.RECORD: {
       return (
-        <span className="whitespace-nowrap py-1 px-2 bg-orange-800 text-white rounded">記録</span>
+        <span className="whitespace-nowrap py-1 px-2 bg-orange-800 text-white rounded">
+          記録
+        </span>
       );
     }
     case PersonalActivityType.RESULT: {
       return (
-        <span className="whitespace-nowrap py-1 px-2 bg-purple-800 text-white rounded">記録</span>
+        <span className="whitespace-nowrap py-1 px-2 bg-purple-800 text-white rounded">
+          記録
+        </span>
       );
     }
     case PersonalActivityType.BODY_DATA: {
       return (
-        <span className="whitespace-nowrap py-1 px-2 bg-purple-800 text-white rounded">身体記録</span>
+        <span className="whitespace-nowrap py-1 px-2 bg-purple-800 text-white rounded">
+          身体記録
+        </span>
       );
     }
     case PersonalActivityType.CLINIC: {
       return (
-        <span className="whitespace-nowrap py-1 px-2 bg-purple-800 text-white rounded">練習会・クリニック</span>
+        <span className="whitespace-nowrap py-1 px-2 bg-purple-800 text-white rounded">
+          練習会・クリニック
+        </span>
       );
     }
     case PersonalActivityType.REHAB: {
       return (
-        <span className="whitespace-nowrap py-1 px-2 bg-purple-800 text-white rounded">リハビリ</span>
+        <span className="whitespace-nowrap py-1 px-2 bg-purple-800 text-white rounded">
+          リハビリ
+        </span>
       );
     }
     case PersonalActivityType.RECORD_TRIAL: {
       return (
-        <span className="whitespace-nowrap py-1 px-2 bg-purple-800 text-white rounded">記録会</span>
+        <span className="whitespace-nowrap py-1 px-2 bg-purple-800 text-white rounded">
+          記録会
+        </span>
       );
     }
     case PersonalActivityType.WORKOUT: {
       return (
-        <span className="whitespace-nowrap py-1 px-2 bg-purple-800 text-white rounded">ワークアウト</span>
+        <span className="whitespace-nowrap py-1 px-2 bg-purple-800 text-white rounded">
+          ワークアウト
+        </span>
       );
     }
     case PersonalActivityType.ENJOY: {
       return (
-        <span className="whitespace-nowrap py-1 px-2 bg-purple-800 text-white rounded">エンジョイ</span>
+        <span className="whitespace-nowrap py-1 px-2 bg-purple-800 text-white rounded">
+          エンジョイ
+        </span>
       );
     }
     case PersonalActivityType.TEAM_ACTIVITY: {
       return (
-        <span className="whitespace-nowrap py-1 px-2 bg-purple-800 text-white rounded">チーム活動</span>
+        <span className="whitespace-nowrap py-1 px-2 bg-purple-800 text-white rounded">
+          チーム活動
+        </span>
       );
     }
     case PersonalActivityType.DROPIN: {
       return (
-        <span className="whitespace-nowrap py-1 px-2 bg-purple-800 text-white rounded">ドロップイン</span>
+        <span className="whitespace-nowrap py-1 px-2 bg-purple-800 text-white rounded">
+          ドロップイン
+        </span>
       );
     }
   }
   return null;
 };
 
+export const formatStartAndEndDatetime = (
+  startDt: Date,
+  endDt: Date | null,
+) => {
+  const start = dayjs(startDt);
+  const end = endDt ? dayjs(endDt) : null;
+  let res = `${start.format("YYYY年MM月DD日 HH:mm")}`;
 
-
-export  const formatStartAndEndDatetime = (startDt: Date, endDt: Date | null) => {
-    const start = dayjs(startDt);
-    const end = endDt ? dayjs(endDt) : null;
-    let res = `${start.format("YYYY年MM月DD日 HH:mm")}`;
-
-    if (end) {
-      res += `- ${
-        start.isSame(end, "day")
-          ? end.format("HH:mm")
-          : end.format("MM月DD日 HH:mm")
-      }`;
-    }
-    return res;
-  };
+  if (end) {
+    res += `- ${
+      start.isSame(end, "day")
+        ? end.format("HH:mm")
+        : end.format("MM月DD日 HH:mm")
+    }`;
+  }
+  return res;
+};

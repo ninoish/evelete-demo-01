@@ -6,7 +6,7 @@ export default function TeamSportSelect({
   placeholder = "スポーツを選択",
   onChange,
   teamSportIds,
-  buttonStyle
+  buttonStyle,
 }: {
   value: string | null;
   placeholder: string | undefined;

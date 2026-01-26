@@ -144,10 +144,7 @@ export default function MySchedulesRoute() {
       <ul className="flex flex-wrap space-2 my-2">
         {personalActivities.map((pa) => {
           return (
-            <li
-              key={pa.id}
-              className="p-2 mb-2 mx-2 w-full md:w-auto"
-            >
+            <li key={pa.id} className="p-2 mb-2 mx-2 w-full md:w-auto">
               <PersonalActivityListItem {...pa}></PersonalActivityListItem>
             </li>
           );

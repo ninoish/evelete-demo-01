@@ -1,7 +1,4 @@
-import type {
-  Country,
-  Prisma,
-} from "@prisma/client";
+import type { Country, Prisma } from "@prisma/client";
 import {
   type ActionFunctionArgs,
   redirect,

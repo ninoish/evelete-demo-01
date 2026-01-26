@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
 import type {
-   AffiliationCategory,
-   Sport,
-   SportAttribute,
+  AffiliationCategory,
+  Sport,
+  SportAttribute,
 } from "@prisma/client";
 import { useFetcher } from "react-router";
 import { useEffect, useState } from "react";
@@ -19,7 +19,6 @@ export function PersonalRecordForm({
     AffiliationCategory[]
   >([]);
   const [sports, setSports] = useState<Sport[]>([]);
-
 
   const { register, handleSubmit } = useForm({
     defaultValues: {
@@ -59,7 +58,6 @@ export function PersonalRecordForm({
   const sportAttributeOptions = sportAttributeOptionFetcher.data as
     | SportAttribute[]
     | undefined;
-
 
   const handleSportsChange = (e) => {
     console.log("SPORTSCHANGE", e);

@@ -13,7 +13,10 @@ import TeamActivityHeaderAttendanceResponse from "./TeamActivityHeaderAttendance
 import type teamActivityService from "~/services/teamActivityService.server";
 import { AttendeeResponseState } from "~/models/teamActivityModel";
 import { FaUser } from "react-icons/fa";
-import { displayTeamActivityType, formatStartAndEndDatetime } from "~/utils/display";
+import {
+  displayTeamActivityType,
+  formatStartAndEndDatetime,
+} from "~/utils/display";
 import TeamIcon from "./TeamIcon";
 
 export function TeamActivityHeader({
@@ -141,7 +144,10 @@ export function TeamActivityHeader({
               <h1>{displayTeamActivityType(activity.teamActivityType)}</h1>
               <h1 className="px-2 flex-1">
                 <span>
-                  {formatStartAndEndDatetime(activity.startDatetime, activity.endDatetime)}
+                  {formatStartAndEndDatetime(
+                    activity.startDatetime,
+                    activity.endDatetime,
+                  )}
                 </span>
               </h1>
               <h6>
@@ -176,10 +182,13 @@ export function TeamActivityHeader({
             <h1>{displayTeamActivityType(activity.teamActivityType)}</h1>
             <h1 className="px-2 flex-1">
               <span>
-                {formatStartAndEndDatetime(activity.startDatetime, activity.endDatetime)}
+                {formatStartAndEndDatetime(
+                  activity.startDatetime,
+                  activity.endDatetime,
+                )}
               </span>
             </h1>
-            
+
             <h6 className="flex gap-1 items-center">
               <FaUser size={18} />
               <span>{activity.currentAttendees}</span>
@@ -189,8 +198,8 @@ export function TeamActivityHeader({
             </h6>
           </div>
           {activity.isGuestAllowed ? (
-              <h5 className="font-bold">ドロップイン</h5>
-            ) : null}
+            <h5 className="font-bold">ドロップイン</h5>
+          ) : null}
           {activity.name ? (
             <div>
               <h1 className="font-bold">{activity.name}</h1>

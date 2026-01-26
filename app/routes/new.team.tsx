@@ -38,9 +38,7 @@ const NewTeamFormSchema = z.object({
       }),
     )
     .nonempty("At least one place is required"),
-  sports: z.array(
-    SportSchema
-  ),
+  sports: z.array(SportSchema),
   // z.array(z.string()) だと、なぜか "42" をappendすると => {"0": "4", "1", "3"} と分解されてしまうので、objectにした。
   canRequestToJoin: formBooleanSchema,
   acceptMembersAgeUnder18: formBooleanSchema,
@@ -308,7 +306,7 @@ export default function NewTeamFormRoute() {
         ? sports.filter((sport) => {
             return (
               sport.name_ja_JP.includes(filteringSportName) ||
-              sport.alias_ja_JP.includes(filteringSportName) || 
+              sport.alias_ja_JP.includes(filteringSportName) ||
               sport.id.includes(filteringSportName)
             );
           })
@@ -318,49 +316,49 @@ export default function NewTeamFormRoute() {
   }, [filteringSportName]);
 
   return (
-      <div className="w-full lg:w-2/3 mx-auto py-4">
-        <h1 className="text-2xl mb-2 text-center">新規チーム作成</h1>
+    <div className="w-full lg:w-2/3 mx-auto py-4">
+      <h1 className="text-2xl mb-2 text-center">新規チーム作成</h1>
 
-        {ownerTeams.length >= 2 ? (
-          <p className="text-red-600">
-            1人のユーザーで2つ以上のチームは作れません
-          </p>
-        ) : null}
-        <div className="px-2">
-          <Form
-            onSubmit={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              console.log(e);
-              form.handleSubmit({ submitAction: "teamSettings" });
-            }}
-            method="post"
-          >
-            <div className="flex flex-col gap-2">
-              <div>
-                <form.Field name="displayName">
-                  {(field) => (
-                    <label className="">
-                      <span className="">チーム名</span>
-                      <input
-                        name={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        type="text"
-                        autoComplete="off"
-                        required={true}
-                        className="p-2"
-                      />
-                      <div style={{ color: "red" }}>
-                        {field.state.meta.errors[0]}
-                      </div>
-                    </label>
-                  )}
-                </form.Field>
-              </div>
+      {ownerTeams.length >= 2 ? (
+        <p className="text-red-600">
+          1人のユーザーで2つ以上のチームは作れません
+        </p>
+      ) : null}
+      <div className="px-2">
+        <Form
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log(e);
+            form.handleSubmit({ submitAction: "teamSettings" });
+          }}
+          method="post"
+        >
+          <div className="flex flex-col gap-2">
+            <div>
+              <form.Field name="displayName">
+                {(field) => (
+                  <label className="">
+                    <span className="">チーム名</span>
+                    <input
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      type="text"
+                      autoComplete="off"
+                      required={true}
+                      className="p-2"
+                    />
+                    <div style={{ color: "red" }}>
+                      {field.state.meta.errors[0]}
+                    </div>
+                  </label>
+                )}
+              </form.Field>
+            </div>
 
-              {/* <label>
+            {/* <label>
               <p>
                 <span className="font-bold">チームID</span>
                 <span className="text-yellow-600 ml-2">
@@ -388,9 +386,9 @@ export default function NewTeamFormRoute() {
               <p>{errors?.slug?.message}</p>
             </label> */}
 
-              <div>
-                <h5>チームへの参加方法</h5>
-                <div className="flex gap-4">
+            <div>
+              <h5>チームへの参加方法</h5>
+              <div className="flex gap-4">
                 <form.Field name="canRequestToJoin">
                   {(field) => (
                     <>
@@ -404,7 +402,6 @@ export default function NewTeamFormRoute() {
                         <span className="ml-1">メンバーによる招待のみ</span>
                       </label>
                       <label className="">
-                        
                         <input
                           name={field.name}
                           onBlur={field.handleBlur}
@@ -419,216 +416,217 @@ export default function NewTeamFormRoute() {
                     </>
                   )}
                 </form.Field>
-                </div>
               </div>
+            </div>
 
-              <div>
-                <form.Field name="acceptMembersAgeUnder18">
-                  {(field) => (
-                    <>
-                      <label className="block">
-                        <input
-                          type="checkbox"
-                          name={field.name}
-                          checked={field.state.value}
-                          onBlur={field.handleBlur}
-                          onChange={(e) => field.handleChange(e.target.checked)}
-                        />
-                        <span className="ml-1">
-                          メンバーに未成年 (18歳以下) を含む
-                        </span>
-                        <div style={{ color: "red" }}>
-                          {field.state.meta.errors[0]}
-                        </div>
-                      </label>
-                      {/* TODO: 18歳以下のユーザーへの対応 */}
-                      <p className="text-red-800">
-                        未成年ユーザーの加入およびアプリ利用には保護者の同意が必要です。13歳未満はサービスを利用できません。
-                      </p>
-                    </>
-                  )}
-                </form.Field>
-              </div>
+            <div>
+              <form.Field name="acceptMembersAgeUnder18">
+                {(field) => (
+                  <>
+                    <label className="block">
+                      <input
+                        type="checkbox"
+                        name={field.name}
+                        checked={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.checked)}
+                      />
+                      <span className="ml-1">
+                        メンバーに未成年 (18歳以下) を含む
+                      </span>
+                      <div style={{ color: "red" }}>
+                        {field.state.meta.errors[0]}
+                      </div>
+                    </label>
+                    {/* TODO: 18歳以下のユーザーへの対応 */}
+                    <p className="text-red-800">
+                      未成年ユーザーの加入およびアプリ利用には保護者の同意が必要です。13歳未満はサービスを利用できません。
+                    </p>
+                  </>
+                )}
+              </form.Field>
+            </div>
 
-              <div className="my-4">
-                <h4 className="font-bold">チームの活動エリア</h4>
-                <form.Field name="places" mode="array">
-                  {(field) => {
-                    return (
-                      <div>
-                        {field.state.value.map((_: any, i: number) => {
-                          return (
-                            <form.Field key={i} name={`places[${i}]`}>
-                              {(subField) => {
-                                return (
-                                  <div className="flex items-center">
-                                    {/* country (disabled) */}
-                                    <label className="">
-                                      <select
-                                       className="p-2"
-                                        name={`places[${i}].countryId`}
-                                        disabled={true}
-                                      >
-                                        <option
-                                          value={subField.state.value.countryId}
-                                        >
-                                          {homeLocation.place.country?.name}
-                                        </option>
-                                      </select>
-                                      <div style={{ color: "red" }}>
-                                        {field.state.meta.errors[0]}
-                                      </div>
-                                    </label>
-
-                                    {/* State */}
-                                    <label className="">
-                                      <select
+            <div className="my-4">
+              <h4 className="font-bold">チームの活動エリア</h4>
+              <form.Field name="places" mode="array">
+                {(field) => {
+                  return (
+                    <div>
+                      {field.state.value.map((_: any, i: number) => {
+                        return (
+                          <form.Field key={i} name={`places[${i}]`}>
+                            {(subField) => {
+                              return (
+                                <div className="flex items-center">
+                                  {/* country (disabled) */}
+                                  <label className="">
+                                    <select
                                       className="p-2"
-                                        name={`places[${i}].stateId`}
-                                        value={subField.state.value.stateId}
-                                        onChange={(e) => {
-                                          subField.handleChange({
-                                            countryId:
-                                              subField.state.value.countryId,
-                                            stateId: e.target.value,
-                                            cityId: "",
-                                          });
-
-                                          updateCities(e.target.value);
-                                        }}
+                                      name={`places[${i}].countryId`}
+                                      disabled={true}
+                                    >
+                                      <option
+                                        value={subField.state.value.countryId}
                                       >
-                                        {states.map((state) => {
+                                        {homeLocation.place.country?.name}
+                                      </option>
+                                    </select>
+                                    <div style={{ color: "red" }}>
+                                      {field.state.meta.errors[0]}
+                                    </div>
+                                  </label>
+
+                                  {/* State */}
+                                  <label className="">
+                                    <select
+                                      className="p-2"
+                                      name={`places[${i}].stateId`}
+                                      value={subField.state.value.stateId}
+                                      onChange={(e) => {
+                                        subField.handleChange({
+                                          countryId:
+                                            subField.state.value.countryId,
+                                          stateId: e.target.value,
+                                          cityId: "",
+                                        });
+
+                                        updateCities(e.target.value);
+                                      }}
+                                    >
+                                      {states.map((state) => {
+                                        return (
+                                          <option
+                                            key={state.id}
+                                            value={state.id}
+                                          >
+                                            {state.name}
+                                          </option>
+                                        );
+                                      })}
+                                    </select>
+                                    <div style={{ color: "red" }}>
+                                      {field.state.meta.errors[0]}
+                                    </div>
+                                  </label>
+
+                                  {/* City */}
+                                  <label className="">
+                                    <select
+                                      className="p-2"
+                                      name={`places[${i}].cityId`}
+                                      value={subField.state.value.cityId}
+                                      onChange={(e) => {
+                                        subField.handleChange({
+                                          countryId:
+                                            subField.state.value.countryId,
+                                          stateId: subField.state.value.stateId,
+                                          cityId: e.target.value,
+                                        });
+                                      }}
+                                    >
+                                      {cityOptions
+                                        .find(
+                                          (co) =>
+                                            co.stateId ===
+                                            subField.state.value.stateId,
+                                        )
+                                        ?.cities.map((city) => {
                                           return (
                                             <option
-                                              key={state.id}
-                                              value={state.id}
+                                              key={city.id}
+                                              value={city.id}
                                             >
-                                              {state.name}
+                                              {city.name}
                                             </option>
                                           );
                                         })}
-                                      </select>
-                                      <div style={{ color: "red" }}>
-                                        {field.state.meta.errors[0]}
-                                      </div>
-                                    </label>
+                                    </select>
+                                    <div style={{ color: "red" }}>
+                                      {field.state.meta.errors[0]}
+                                    </div>
+                                  </label>
 
-                                    {/* City */}
-                                    <label className="">
-                                      <select
-                                      className="p-2"
-                                        name={`places[${i}].cityId`}
-                                        value={subField.state.value.cityId}
-                                        onChange={(e) => {
-                                          subField.handleChange({
-                                            countryId:
-                                              subField.state.value.countryId,
-                                            stateId:
-                                              subField.state.value.stateId,
-                                            cityId: e.target.value,
-                                          });
-                                        }}
-                                      >
-                                        {cityOptions
-                                          .find(
-                                            (co) =>
-                                              co.stateId ===
-                                              subField.state.value.stateId,
-                                          )
-                                          ?.cities.map((city) => {
-                                            return (
-                                              <option
-                                                key={city.id}
-                                                value={city.id}
-                                              >
-                                                {city.name}
-                                              </option>
-                                            );
-                                          })}
-                                      </select>
-                                      <div style={{ color: "red" }}>
-                                        {field.state.meta.errors[0]}
-                                      </div>
-                                    </label>
+                                  {i > 0 ? (
+                                    <button
+                                      className="py-2 px-4 rounded bg-slate-400 text-white"
+                                      type="button"
+                                      onClick={() => {
+                                        form.removeFieldValue(`places`, i);
+                                      }}
+                                    >
+                                      Remove
+                                    </button>
+                                  ) : null}
+                                </div>
+                              );
+                            }}
+                          </form.Field>
+                        );
+                      })}
+                    </div>
+                  );
+                }}
+              </form.Field>
 
-                                    {i > 0 ? (
-                                      <button
-                                        className="py-2 px-4 rounded bg-slate-400 text-white"
-                                        type="button"
-                                        onClick={() => {
-                                          form.removeFieldValue(`places`, i);
-                                        }}
-                                      >
-                                        Remove
-                                      </button>
-                                    ) : null}
-                                  </div>
-                                );
-                              }}
-                            </form.Field>
-                          );
-                        })}
-                      </div>
-                    );
-                  }}
-                </form.Field>
+              <div className="mt-2">
+                <button
+                  className="py-2 px-4 rounded bg-slate-600 text-white"
+                  type="button"
+                  onClick={() =>
+                    form.pushFieldValue("places", defaultLocationValue)
+                  }
+                >
+                  エリア追加
+                </button>
+              </div>
+            </div>
 
-                <div className="mt-2">
-                  <button
-                    className="py-2 px-4 rounded bg-slate-600 text-white"
-                    type="button"
-                    onClick={() =>
-                      form.pushFieldValue("places", defaultLocationValue)
-                    }
-                  >
-                    エリア追加
-                  </button>
+            <div className="">
+              <div className="flex items-center">
+                <h4 className="pr-4">
+                  <span className="font-bold">行うスポーツ</span>
+                  <span>({form.getFieldValue("sports").length})</span>
+                </h4>
+                <div className="flex-1">
+                  <input
+                    className="p-2"
+                    type="text"
+                    placeholder="スポーツの名前で検索"
+                    autoComplete="off"
+                    value={filteringSportName}
+                    onChange={(e) => {
+                      setFilteringSportName(e.target.value);
+                    }}
+                  />
                 </div>
               </div>
-
-              <div className="">
-                <div className="flex items-center">
-                  <h4 className="pr-4">
-                    <span className="font-bold">行うスポーツ</span>
-                    <span>({form.getFieldValue("sports").length})</span>
-                  </h4>
-                  <div className="flex-1">
-                    <input
-                    className="p-2"
-                      type="text"
-                      placeholder="スポーツの名前で検索"
-                      autoComplete="off"
-                      value={filteringSportName}
-                      onChange={(e) => {
-                        setFilteringSportName(e.target.value);
-                      }}
-                    />
-                  </div>
-                </div>
-                <div>
-                  {/* オプション */}
-                  <ul className="sports-options flex gap-x-2 flex-wrap">
-                    {sportOptions.map((so) => (
-                      <li key={so.id}>
-                        <button
-                          type="button"
-                          className="border rounded py-1 px-2"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleClickSportOption(so);
-                          }}
-                        >
-                          <span className="mr-1">{so.emoji}</span>
-                          <span>{so.name_ja_JP}</span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  {/* 選択済み */}
-                  <ul className="mt-1 flex flex-wrap gap-x-2">
-                    {form.getFieldValue("sports").map((sp: Sport, index: number) => (
+              <div>
+                {/* オプション */}
+                <ul className="sports-options flex gap-x-2 flex-wrap">
+                  {sportOptions.map((so) => (
+                    <li key={so.id}>
+                      <button
+                        type="button"
+                        className="border rounded py-1 px-2"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleClickSportOption(so);
+                        }}
+                      >
+                        <span className="mr-1">{so.emoji}</span>
+                        <span>{so.name_ja_JP}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                {/* 選択済み */}
+                <ul className="mt-1 flex flex-wrap gap-x-2">
+                  {form
+                    .getFieldValue("sports")
+                    .map((sp: Sport, index: number) => (
                       <li
                         key={sp.id}
                         className="rounded bg-orange-300 flex gap-2 justify-start items-center py-1 px-2"
@@ -646,23 +644,23 @@ export default function NewTeamFormRoute() {
                         </button>
                       </li>
                     ))}
-                  </ul>
-                </div>
-              </div>
-
-              <div className="flex justify-end items-center gap-4">
-                <div>
-                  <button
-                    className="py-2 px-4 rounded bg-green-600 text-white"
-                    type="submit"
-                  >
-                    作成
-                  </button>
-                </div>
+                </ul>
               </div>
             </div>
-          </Form>
-        </div>
+
+            <div className="flex justify-end items-center gap-4">
+              <div>
+                <button
+                  className="py-2 px-4 rounded bg-green-600 text-white"
+                  type="submit"
+                >
+                  作成
+                </button>
+              </div>
+            </div>
+          </div>
+        </Form>
       </div>
+    </div>
   );
 }

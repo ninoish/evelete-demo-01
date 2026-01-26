@@ -1,12 +1,7 @@
 import type { Prisma } from "@prisma/client";
-import dayjs from "dayjs";
-import {
-  ChevronLeft,
-  ChevronLeftCircle,
-  ChevronRight,
-  ChevronRightCircle,
-} from "lucide-react";
-import { useEffect, useRef } from "react";
+import type dayjs from "dayjs";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useRef } from "react";
 import { Link } from "react-router";
 
 type ActivityDatePickerProps = {
@@ -22,17 +17,15 @@ export default function ActivityDatePicker({
   from,
   activities,
 }: ActivityDatePickerProps) {
+  // TODO: デスクトップでのwheel 時のブラウザバックを制御したいが、SPAのページ遷移を挟むとなぜかPreventDefault()が機能しない。ブラウザのバグかもしれない。
+  const horizontalScroller = useRef<HTMLDivElement>(null);
 
-  if(!from) {
+  if (!from) {
     return null;
   }
 
-  console.log(from);
-
   const days = from.daysInMonth();
 
-  // TODO: デスクトップでのwheel 時のブラウザバックを制御したいが、SPAのページ遷移を挟むとなぜかPreventDefault()が機能しない。ブラウザのバグかもしれない。
-  const horizontalScroller = useRef<HTMLDivElement>(null);
   // useEffect(() => {
   //   console.log("???");
   //   const el = horizontalScroller.current;
@@ -67,42 +60,52 @@ export default function ActivityDatePicker({
   //   return () => el.removeEventListener("wheel", onWheel, { capture: true });
   // }, []);
 
-//   useEffect(() => {
-//   const el = horizontalScroller.current;
-//   if (!el) return;
+  //   useEffect(() => {
+  //   const el = horizontalScroller.current;
+  //   if (!el) return;
 
-//   const onEnter = () => {
-//     console.log("locked");
-//     document.documentElement.classList.add("lock-x-overscroll");
-//     document.body.classList.add("lock-x-overscroll");
-//   }
-//   const onLeave = () => {
-//         console.log("unlocked");
+  //   const onEnter = () => {
+  //     console.log("locked");
+  //     document.documentElement.classList.add("lock-x-overscroll");
+  //     document.body.classList.add("lock-x-overscroll");
+  //   }
+  //   const onLeave = () => {
+  //         console.log("unlocked");
 
-//     document.documentElement.classList.remove("lock-x-overscroll");
-//         document.body.classList.remove("lock-x-overscroll");
+  //     document.documentElement.classList.remove("lock-x-overscroll");
+  //         document.body.classList.remove("lock-x-overscroll");
 
-//   }
+  //   }
 
-//   el.addEventListener("pointerenter", onEnter);
-//   el.addEventListener("pointerleave", onLeave);
+  //   el.addEventListener("pointerenter", onEnter);
+  //   el.addEventListener("pointerleave", onLeave);
 
-//   return () => {
-//     el.removeEventListener("pointerenter", onEnter);
-//     el.removeEventListener("pointerleave", onLeave);
-//     document.documentElement.classList.remove("lock-x-overscroll");
-//   };
-// }, []);
+  //   return () => {
+  //     el.removeEventListener("pointerenter", onEnter);
+  //     el.removeEventListener("pointerleave", onLeave);
+  //     document.documentElement.classList.remove("lock-x-overscroll");
+  //   };
+  // }, []);
 
   return (
     <div>
       <div className="flex justify-between items-center">
         <div className="p-2">
-          <Link to={`?from=${from.add(-1, "month").format("YYYY-MM")}`} className="align-top inline-block"><ChevronLeft /></Link>
+          <Link
+            to={`?from=${from.add(-1, "month").format("YYYY-MM")}`}
+            className="align-top inline-block"
+          >
+            <ChevronLeft />
+          </Link>
         </div>
         <div>{from.format("YYYY年M月")}</div>
         <div className="p-2">
-          <Link to={`?from=${from.add(1, "month").format("YYYY-MM")}`} className="align-top inline-block"><ChevronRight /></Link>
+          <Link
+            to={`?from=${from.add(1, "month").format("YYYY-MM")}`}
+            className="align-top inline-block"
+          >
+            <ChevronRight />
+          </Link>
         </div>
       </div>
       <div

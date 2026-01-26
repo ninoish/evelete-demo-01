@@ -7,5 +7,9 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
-  return <MainLayout><Outlet /></MainLayout>;
+  return (
+    <MainLayout>
+      <Outlet />
+    </MainLayout>
+  );
 }

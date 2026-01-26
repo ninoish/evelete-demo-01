@@ -24,14 +24,14 @@ export default function TeamHeaderActionOptions({
       return <div className="flex-1 text-sm text-green-800">オーナー</div>;
     }
     if (meMember.isAdmin) {
-      return <div  className="flex-1 text-sm text-green-600">管理者</div>;
+      return <div className="flex-1 text-sm text-green-600">管理者</div>;
     }
 
     if (false) {
       return <div>Alnum</div>;
     }
 
-    return <div  className="flex-1 text-sm text-green-400">メンバー</div>;
+    return <div className="flex-1 text-sm text-green-400">メンバー</div>;
   };
 
   const teamFollowButton = () => {
@@ -68,11 +68,7 @@ export default function TeamHeaderActionOptions({
     const joinRequestStatus = null;
     if (joinRequestStatus === "pending") {
       return (
-        <button
-          type="button"
-          disabled
-          className="border rounded py-1 px-2"
-        >
+        <button type="button" disabled className="border rounded py-1 px-2">
           参加承認待ち
         </button>
       );

@@ -14,7 +14,7 @@ body {
 
 .checkbox-container:has(input[type="checkbox"]:checked),
 .checkbox-container:has(input[type="radio"]:checked) {
-  border:2px solid #535881;
+  border: 2px solid #535881;
   color: #535881;
   font-weight: bold;
   flex: 1;

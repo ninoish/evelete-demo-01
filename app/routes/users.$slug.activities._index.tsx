@@ -1,13 +1,12 @@
 import type { PersonalActivity } from "@prisma/client";
-import { LoaderFunctionArgs, redirect } from "react-router";
-import { Link, useLoaderData, useRouteLoaderData } from "react-router";
+import { type LoaderFunctionArgs, redirect } from "react-router";
+import { Link, useLoaderData } from "react-router";
 
 import { Auth } from "~/services/auth.server";
 import personalActivityService from "~/services/personalActivity.server";
 import { now } from "~/utils/datetime";
 import {
   displayPersonalActivityType,
-  displayTeamActivityType,
   formatStartAndEndDatetime,
 } from "~/utils/display";
 
@@ -45,10 +44,12 @@ export default function UserActivitiesRoute() {
         {personalActivities?.map((pa: PersonalActivity) => {
           return (
             <li key={pa.id}>
-              <Link to={`/users/${pa.user.slug}/activities/${pa.id}`} className="flex items-center flex-wrap gap-2">
-                
+              <Link
+                to={`/users/${pa.user.slug}/activities/${pa.id}`}
+                className="flex items-center flex-wrap gap-2"
+              >
                 {pa.activityType?.map((at) => {
-                  return <div>{displayPersonalActivityType(at)}</div>;
+                  return <div key={at}>{displayPersonalActivityType(at)}</div>;
                 })}
                 <div>
                   {formatStartAndEndDatetime(pa.startDatetime, pa.endDatetime)}

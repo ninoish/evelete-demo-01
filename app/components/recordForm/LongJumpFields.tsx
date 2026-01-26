@@ -1,5 +1,5 @@
 // src/forms/LongDistanceJumpFields.tsx
-import { ReactFormExtendedApi } from "@tanstack/react-form";
+import type { ReactFormExtendedApi } from "@tanstack/react-form";
 import { NumberField } from "~/components/recordForm/fields/NumberField";
 
 type JumpFormApi = ReactFormExtendedApi<
@@ -7,6 +7,8 @@ type JumpFormApi = ReactFormExtendedApi<
     distance?: number;
     wind?: number;
   },
+  any,
+  any,
   any,
   any,
   any,

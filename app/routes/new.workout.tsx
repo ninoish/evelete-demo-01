@@ -34,7 +34,7 @@ export const workoutFormSchema = z.object({
   endTime: timeSchema.or(z.literal("")).optional(),
   menus: z.array(z.string()),
   place: z.array(z.string()),
-  sportId: z.string().optional()
+  sportId: z.string().optional(),
 });
 
 export type WorkoutFormData = z.infer<typeof workoutFormSchema>;

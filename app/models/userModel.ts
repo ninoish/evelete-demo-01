@@ -1,6 +1,6 @@
 import {
-  BiologicalGender,
-  SportAttribute,
+  type BiologicalGender,
+  type SportAttribute,
   UserPlaceType,
 } from "@prisma/client";
 import { getPrisma } from "~/services/database.server";

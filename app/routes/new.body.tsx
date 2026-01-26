@@ -114,8 +114,6 @@ export default function NewPersonalBodyDataRoute() {
     prefWeightUnit === WeightUnit.KILOGRAM ? "kg" : "lbs",
   );
 
-
-
   const defaultMeta = { submitAction: null as string | null };
 
   const form = useAppForm({
@@ -567,7 +565,7 @@ export default function NewPersonalBodyDataRoute() {
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.checked)}
                       />
-                      <span >タイムラインに投稿する</span>
+                      <span>タイムラインに投稿する</span>
                     </label>
                   )}
                 </form.Field>

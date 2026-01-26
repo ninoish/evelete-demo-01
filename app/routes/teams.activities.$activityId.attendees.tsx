@@ -1,6 +1,5 @@
 import {
-  Prisma,
-  TeamActivityAttendanceResponse,
+  type Prisma,
   TeamActivityAttendanceResponseType,
 } from "@prisma/client";
 import { Link, type LoaderFunctionArgs, data } from "react-router";

@@ -6,9 +6,10 @@ import tsconfigPaths from "vite-tsconfig-paths";
 export default defineConfig({
   plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
   ssr: {
-    noExternal: ["@prisma/client"],
+    external: ["@prisma/client", "prisma"],
   },
-  optimizeDeps: {
-    exclude: ["@prisma/client"],
+  server: {
+    host: true,
+    port: 3001
   },
 });

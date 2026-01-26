@@ -16,9 +16,9 @@ type FormsRegistry = Record<string, ActivityTypeMap>;
  */
 
 const FORMS: FormsRegistry = {
-  "golf": {
+  golf: {
     [PersonalActivityType.PRACTICE]: (p) => <GolfPracticeForm {...p} />,
-    [PersonalActivityType.PRACTICAL_PRACTICE]: (p) =>  <GolfRoundForm {...p} />
+    [PersonalActivityType.PRACTICAL_PRACTICE]: (p) => <GolfRoundForm {...p} />,
   },
 };
 

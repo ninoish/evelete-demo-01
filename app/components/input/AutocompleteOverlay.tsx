@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import type React from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type Candidate = { label: string; value: string; alias?: string };
 
@@ -21,7 +22,7 @@ export function AutocompleteOverlay({
   id = "autocomplete",
   disabled,
   prioritizedValues = [],
-  buttonStyle
+  buttonStyle,
 }: AutocompleteOverlayProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -108,7 +109,7 @@ export function AutocompleteOverlay({
           className={`w-full text-left rounded-2xl border px-4 py-3 bg-white shadow-sm hover:shadow transition ${
             disabled ? "opacity-60 cursor-not-allowed" : ""
           }`}
-          style={{...buttonStyle || {}}}
+          style={{ ...(buttonStyle || {}) }}
           onClick={() => {
             if (!disabled) {
               // TODO: ブラウザバックで閉じられるようにしたい。

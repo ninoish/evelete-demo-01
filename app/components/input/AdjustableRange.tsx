@@ -18,7 +18,7 @@ export const AdjustableRange: React.FC<AdjustableRangeProps> = ({
 }) => {
   const trackRef = useRef<HTMLDivElement | null>(null);
   const [draggingThumb, setDraggingThumb] = useState<"min" | "max" | null>(
-    null
+    null,
   );
 
   const clamp = (v: number) => Math.min(max, Math.max(min, v));
@@ -28,8 +28,7 @@ export const AdjustableRange: React.FC<AdjustableRangeProps> = ({
     return clamp(snapped);
   };
 
-  const valueToPercent = (v: number) =>
-    ((v - min) / (max - min || 1)) * 100;
+  const valueToPercent = (v: number) => ((v - min) / (max - min || 1)) * 100;
 
   const updateFromClientX = (clientX: number, thumb: "min" | "max") => {
     if (!trackRef.current) return;
@@ -51,9 +50,7 @@ export const AdjustableRange: React.FC<AdjustableRangeProps> = ({
     onChange([curMin, curMax]);
   };
 
-  const handleTrackPointerDown = (
-    e: React.PointerEvent<HTMLDivElement>
-  ) => {
+  const handleTrackPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!trackRef.current) return;
     const rect = trackRef.current.getBoundingClientRect();
     const ratio = (e.clientX - rect.left) / rect.width;
@@ -63,8 +60,7 @@ export const AdjustableRange: React.FC<AdjustableRangeProps> = ({
     const [curMin, curMax] = value;
     const distToMin = Math.abs(clickedValue - curMin);
     const distToMax = Math.abs(clickedValue - curMax);
-    const thumb: "min" | "max" =
-      distToMin < distToMax ? "min" : "max";
+    const thumb: "min" | "max" = distToMin < distToMax ? "min" : "max";
 
     setDraggingThumb(thumb);
     (e.target as HTMLElement).setPointerCapture(e.pointerId);

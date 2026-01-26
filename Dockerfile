@@ -32,20 +32,17 @@ RUN npm run build
 # Production image with only production dependencies
 FROM base AS production
 COPY package.json package-lock.json ./
-# Install production dependencies and prisma CLI (needed for migrations)
-RUN npm ci --omit=dev --ignore-scripts || (sleep 5 && npm ci --omit=dev --ignore-scripts) || (sleep 10 && npm ci --omit=dev --ignore-scripts) \
-  && npm install --no-save prisma@^7.2.0
+# Install production dependencies including @prisma/client with all runtime files
+RUN npm ci
+
+COPY --from=build /app/prisma ./prisma
+COPY --from=build /app/prisma.config.ts ./prisma.config.ts
+RUN npx prisma generate
 
 # Copy built application and Prisma files
 COPY --from=build /app/build ./build
-COPY --from=build /app/prisma ./prisma
-COPY --from=build /app/generated ./generated
-COPY --from=build /app/prisma.config.ts ./prisma.config.ts
-# Copy Prisma Client generated in build stage (needed for runtime)
-# Remove existing @prisma/client and copy the complete generated version from build stage
-RUN rm -rf ./node_modules/@prisma/client ./node_modules/.prisma
-COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=build /app/node_modules/@prisma/client ./node_modules/@prisma/client
+
+RUN cp ./build/server/index.js ./build/server/index.cjs
 
 # Expose port
 EXPOSE 3000
@@ -55,6 +52,6 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
 # Run migrations and start the server
-# Note: db:refresh runs prisma generate and prisma migrate dev
-# It's safe to run on every container start
-CMD ["sh", "-c", "npm run db:refresh && npm run start"]
+# Prisma Client is already generated in build stage, so we only need to run migrations
+# prisma migrate deploy applies existing migrations without running prisma generate
+CMD ["sh", "-c", "npx prisma migrate deploy && npm run start"]

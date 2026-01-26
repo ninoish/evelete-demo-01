@@ -18,11 +18,7 @@ const getByUserId = async (userId: string) => {
   return data;
 };
 
-const upsert = async (
-  userId: string,
-  sportId: string,
-  order: number,
-) => {
+const upsert = async (userId: string, sportId: string, order: number) => {
   const db = getPrisma();
 
   const result = await db.userSport.upsert({

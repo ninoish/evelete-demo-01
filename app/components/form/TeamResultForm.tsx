@@ -6,8 +6,6 @@ interface TeamResultFormProps {
 }
 
 export function TeamResultForm({ team, onSubmit }: TeamResultFormProps) {
-  
-
   return (
     <form method="post">
       <button type="submit">作成</button>

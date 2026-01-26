@@ -315,8 +315,7 @@ export default function NewPersonalActivityRoute() {
                     activityType={selectedActivityType}
                     onChange={async () => {
                       const prs = form.getFieldValue("personalRecords");
-                      const description =
-                        form.getFieldValue("description");
+                      const description = form.getFieldValue("description");
 
                       console.log(prs, description);
                       // ここで Cloudflare R2 / Images などにアップロードし、URL を返す

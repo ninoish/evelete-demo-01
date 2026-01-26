@@ -5,7 +5,10 @@ import { useLoaderData } from "react-router";
 import { Auth } from "~/services/auth.server";
 import teamService from "~/services/teamService.server";
 import { now } from "~/utils/datetime";
-import { displayTeamActivityType, formatStartAndEndDatetime } from "~/utils/display";
+import {
+  displayTeamActivityType,
+  formatStartAndEndDatetime,
+} from "~/utils/display";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const user = await new Auth().isAuthenticated(request);
@@ -75,23 +78,37 @@ export default function TeamIndexRoute() {
       {isMember ? (
         <>
           <div className="px-4 py-2 flex justify-between items-center">
-          <h1>直近のスケジュール</h1>
-          <Link to="activities" className="text-sm">もっと見る</Link>
+            <h1>直近のスケジュール</h1>
+            <Link to="activities" className="text-sm">
+              もっと見る
+            </Link>
           </div>
           <ul className="px-4 my-2 flex flex-col gap-4">
             {recentActivities.map((a) => {
               return (
-                <li key={a.id} >
+                <li key={a.id}>
                   <div>
-                    <Link to={`/teams/activities/${a.id}`} className="flex flex-col gap-1">
-                    <div className="flex items-center gap-2">
-                      <div>{displayTeamActivityType(a.teamActivityType)}</div>
-                      <div>{formatStartAndEndDatetime(a.startDatetime, a.endDatetime)}</div>
+                    <Link
+                      to={`/teams/activities/${a.id}`}
+                      className="flex flex-col gap-1"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div>{displayTeamActivityType(a.teamActivityType)}</div>
+                        <div>
+                          {formatStartAndEndDatetime(
+                            a.startDatetime,
+                            a.endDatetime,
+                          )}
+                        </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        {a.isGuestAllowed ? <div className="font-bold text-xs">ドロップイン</div> : null}
+                        {a.isGuestAllowed ? (
+                          <div className="font-bold text-xs">ドロップイン</div>
+                        ) : null}
                         <h4>{a.name}</h4>
-                        <div>{a.currentAttendees} / {a.maxAttendees}</div>
+                        <div>
+                          {a.currentAttendees} / {a.maxAttendees}
+                        </div>
                         <div>TODO: 私の回答</div>
                       </div>
                     </Link>
@@ -103,9 +120,11 @@ export default function TeamIndexRoute() {
         </>
       ) : (
         <>
-        <div className="px-4 py-2 flex justify-between items-center">
-          <h1>直近のドロップイン</h1>
-          <Link to="activities" className="text-sm">もっと見る</Link>
+          <div className="px-4 py-2 flex justify-between items-center">
+            <h1>直近のドロップイン</h1>
+            <Link to="activities" className="text-sm">
+              もっと見る
+            </Link>
           </div>
           <ul className="px-4">
             {dropins.map((d) => {

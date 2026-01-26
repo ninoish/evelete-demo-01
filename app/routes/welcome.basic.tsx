@@ -232,8 +232,8 @@ const WelcomeBasicPage = () => {
             minLength={4}
             maxLength={30}
             onChange={(ev) => {
-                setUrlName(ev.currentTarget.value);
-              }}
+              setUrlName(ev.currentTarget.value);
+            }}
           />
 
           <div>
@@ -277,7 +277,11 @@ const WelcomeBasicPage = () => {
             <h4>活動エリア</h4>
             <p className="text-red">全体には公開されません</p>
             <label>
-              <select name="livingCountry" className="p-2" onChange={handleCountryChange}>
+              <select
+                name="livingCountry"
+                className="p-2"
+                onChange={handleCountryChange}
+              >
                 <option value="">国を選択してください</option>
                 {countryData.map((country) => (
                   <option
@@ -293,7 +297,11 @@ const WelcomeBasicPage = () => {
 
             {states && states.length > 0 ? (
               <label>
-                <select name="livingState" className="p-2" onChange={handleStateChange}>
+                <select
+                  name="livingState"
+                  className="p-2"
+                  onChange={handleStateChange}
+                >
                   <option value="">都道府県を選択してください</option>
                   {states.map((state) => (
                     <option key={state.id} value={state.id}>
@@ -306,7 +314,11 @@ const WelcomeBasicPage = () => {
 
             {cities && cities.length > 0 ? (
               <label>
-                <select name="livingCity" className="p-2" onChange={handleCityChange}>
+                <select
+                  name="livingCity"
+                  className="p-2"
+                  onChange={handleCityChange}
+                >
                   <option value="">市区町村を選択してください</option>
                   {cities.map((city) => (
                     <option key={city.id} value={city.id}>

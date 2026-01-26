@@ -20,7 +20,10 @@ export default function GolfPracticeForm({
     recordMasterId: string;
     recordValue: number;
   }> = useStore(form.store, (s: any) => s.values?.personalRecords ?? []);
- const description: string = useStore(form.store, (s: any) => s.values?.description ?? "");
+  const description: string = useStore(
+    form.store,
+    (s: any) => s.values?.description ?? "",
+  );
 
   // 読み出しヘルパー
   const getPrValue = (id: string): number => {
@@ -87,7 +90,7 @@ export default function GolfPracticeForm({
 
       <div className="grid grid-cols-1">
         {/* description */}
-        
+
         <label className="block">
           <span className="block text-sm font-medium">コメント</span>
           <textarea

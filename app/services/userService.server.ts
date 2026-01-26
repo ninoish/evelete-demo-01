@@ -82,10 +82,10 @@ const getDetailsById = async (userId: string) => {
         include: {
           sport: {
             include: {
-              attributes: true
-            }
-          }
-        }
+              attributes: true,
+            },
+          },
+        },
       },
       places: {
         include: {

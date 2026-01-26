@@ -2,11 +2,11 @@ import * as React from "react";
 import { useStore } from "@tanstack/react-form";
 
 // personalRecords 用の ID 定義
-const ROUND_COURSE_ID = "golf-round-course";           // recordData: { name: string }
-const ROUND_HOLES_COUNT_ID = "golf-round-holes-count";  // recordValue: number
-const ROUND_TOTAL_PAR_ID = "golf-round-total-par";      // recordValue: number
-const ROUND_TOTAL_SCORE_ID = "golf-round-total-score";  // recordValue: number (holes[].strokes 合計)
-const ROUND_HOLES_DETAIL_ID = "golf-round-holes-detail";// recordData: { holes: Hole[] }
+const ROUND_COURSE_ID = "golf-round-course"; // recordData: { name: string }
+const ROUND_HOLES_COUNT_ID = "golf-round-holes-count"; // recordValue: number
+const ROUND_TOTAL_PAR_ID = "golf-round-total-par"; // recordValue: number
+const ROUND_TOTAL_SCORE_ID = "golf-round-total-score"; // recordValue: number (holes[].strokes 合計)
+const ROUND_HOLES_DETAIL_ID = "golf-round-holes-detail"; // recordData: { holes: Hole[] }
 
 type Hole = {
   index: number; // 1-based
@@ -17,9 +17,18 @@ type Hole = {
   maxDrive: number; // 最大飛距離
 };
 
-export function GolfRoundForm({ form, onChange }: { form: any; onChange?: () => void }) {
-  const personalRecords: Array<{ recordMasterId: string; recordValue?: number; recordData?: any }>
-    = useStore(form.store, (s: any) => s.values?.personalRecords ?? []);
+export function GolfRoundForm({
+  form,
+  onChange,
+}: {
+  form: any;
+  onChange?: () => void;
+}) {
+  const personalRecords: Array<{
+    recordMasterId: string;
+    recordValue?: number;
+    recordData?: any;
+  }> = useStore(form.store, (s: any) => s.values?.personalRecords ?? []);
 
   const getNumber = (id: string, fallback = 0): number => {
     const hit = personalRecords.find((r) => r.recordMasterId === id);
@@ -28,11 +37,14 @@ export function GolfRoundForm({ form, onChange }: { form: any; onChange?: () => 
   };
   const getString = (id: string, fallback = ""): string => {
     const hit = personalRecords.find((r) => r.recordMasterId === id);
-    const v = (hit?.recordData?.name as string) ?? (hit?.recordData?.value as string);
+    const v =
+      (hit?.recordData?.name as string) ?? (hit?.recordData?.value as string);
     return typeof v === "string" ? v : fallback;
   };
   const getHoles = (): Hole[] => {
-    const hit = personalRecords.find((r) => r.recordMasterId === ROUND_HOLES_DETAIL_ID);
+    const hit = personalRecords.find(
+      (r) => r.recordMasterId === ROUND_HOLES_DETAIL_ID,
+    );
     const holes: Hole[] = hit?.recordData?.holes ?? [];
     return Array.isArray(holes) ? holes : [];
   };
@@ -61,8 +73,13 @@ export function GolfRoundForm({ form, onChange }: { form: any; onChange?: () => 
   const upsertHoles = (holes: Hole[]) => {
     form.setFieldValue("personalRecords", (prev: any[] = []) => {
       const next = [...prev];
-      const i = next.findIndex((r) => r.recordMasterId === ROUND_HOLES_DETAIL_ID);
-      const record = { recordMasterId: ROUND_HOLES_DETAIL_ID, recordData: { holes } };
+      const i = next.findIndex(
+        (r) => r.recordMasterId === ROUND_HOLES_DETAIL_ID,
+      );
+      const record = {
+        recordMasterId: ROUND_HOLES_DETAIL_ID,
+        recordData: { holes },
+      };
       if (i >= 0) {
         next[i] = { ...next[i], ...record };
       } else {
@@ -84,13 +101,25 @@ export function GolfRoundForm({ form, onChange }: { form: any; onChange?: () => 
     if (cur.length === holeCount) return cur;
     const next: Hole[] = Array.from({ length: holeCount }, (_, i) => {
       const from = cur[i];
-      return from ?? { index: i + 1, par: 4, yard: 350, strokes: 4, putts: 0, maxDrive: 0 };
+      return (
+        from ?? {
+          index: i + 1,
+          par: 4,
+          yard: 350,
+          strokes: 4,
+          putts: 0,
+          maxDrive: 0,
+        }
+      );
     });
     return next;
   }, [holeCount, personalRecords]);
 
   // totalScore は holes[].strokes の合計から自動計算
-  const totalScore = React.useMemo(() => holes.reduce((s, h) => s + (Number(h.strokes) || 0), 0), [holes]);
+  const totalScore = React.useMemo(
+    () => holes.reduce((s, h) => s + (Number(h.strokes) || 0), 0),
+    [holes],
+  );
 
   // 親へ副作用的に反映（holes/totalScore）
   React.useEffect(() => {
@@ -120,7 +149,9 @@ export function GolfRoundForm({ form, onChange }: { form: any; onChange?: () => 
           <select
             className="w-full rounded-xl border px-3 py-2"
             value={holeCount}
-            onChange={(e) => upsertNumber(ROUND_HOLES_COUNT_ID, Number(e.target.value))}
+            onChange={(e) =>
+              upsertNumber(ROUND_HOLES_COUNT_ID, Number(e.target.value))
+            }
           >
             <option value={9}>9</option>
             <option value={18}>18</option>
@@ -135,7 +166,12 @@ export function GolfRoundForm({ form, onChange }: { form: any; onChange?: () => 
             inputMode="numeric"
             className="w-full rounded-xl border px-3 py-2"
             value={totalPar}
-            onChange={(e) => upsertNumber(ROUND_TOTAL_PAR_ID, Math.max(0, Math.floor(Number(e.target.value || 0))))}
+            onChange={(e) =>
+              upsertNumber(
+                ROUND_TOTAL_PAR_ID,
+                Math.max(0, Math.floor(Number(e.target.value || 0))),
+              )
+            }
           />
         </label>
 
@@ -155,10 +191,19 @@ export function GolfRoundForm({ form, onChange }: { form: any; onChange?: () => 
       <div className="space-y-3">
         <h3 className="font-bold text-lg">ホールごとの記録</h3>
         {holes.map((h, i) => (
-          <div key={i} className="border-b last:border-b-0 pb-4 grid grid-cols-6 md:grid-cols-12 gap-x-4 gap-y-2 items-end">
+          <div
+            key={i}
+            className="border-b last:border-b-0 pb-4 grid grid-cols-6 md:grid-cols-12 gap-x-4 gap-y-2 items-end"
+          >
             <div className="col-span-1">
               <label className="block text-xs text-gray-600 mb-1">#</label>
-              <input type="number" className="w-full border-none py-2" style={{ "--color-border": "none"}} value={h.index} readOnly />
+              <input
+                type="number"
+                className="w-full border-none py-2"
+                style={{ "--color-border": "none" }}
+                value={h.index}
+                readOnly
+              />
             </div>
             <div className="col-span-2">
               <label className="block text-xs text-gray-600 mb-1">Par</label>
@@ -168,7 +213,10 @@ export function GolfRoundForm({ form, onChange }: { form: any; onChange?: () => 
                 className="w-full rounded-xl border px-3 py-2"
                 value={h.par}
                 onChange={(e) => {
-                  const v = Math.max(3, Math.floor(Number(e.target.value || 3)));
+                  const v = Math.max(
+                    3,
+                    Math.floor(Number(e.target.value || 3)),
+                  );
                   const next = holes.slice();
                   next[i] = { ...next[i], par: v };
                   upsertHoles(next);
@@ -183,7 +231,10 @@ export function GolfRoundForm({ form, onChange }: { form: any; onChange?: () => 
                 className="w-full rounded-xl border px-3 py-2"
                 value={h.yard}
                 onChange={(e) => {
-                  const v = Math.max(1, Math.floor(Number(e.target.value || 0)));
+                  const v = Math.max(
+                    1,
+                    Math.floor(Number(e.target.value || 0)),
+                  );
                   const next = holes.slice();
                   next[i] = { ...next[i], yard: v };
                   upsertHoles(next);
@@ -191,14 +242,19 @@ export function GolfRoundForm({ form, onChange }: { form: any; onChange?: () => 
               />
             </div>
             <div className="col-span-2">
-              <label className="block text-xs text-gray-600 mb-1">結果（打数）</label>
+              <label className="block text-xs text-gray-600 mb-1">
+                結果（打数）
+              </label>
               <input
                 type="number"
                 inputMode="numeric"
                 className="w-full rounded-xl border px-3 py-2"
                 value={Number.isFinite(h.strokes) ? String(h.strokes) : "0"}
                 onChange={(e) => {
-                  const v = Math.max(0, Math.floor(Number(e.target.value || 0)));
+                  const v = Math.max(
+                    0,
+                    Math.floor(Number(e.target.value || 0)),
+                  );
                   const next = holes.slice();
                   next[i] = { ...next[i], strokes: v };
                   upsertHoles(next);
@@ -206,14 +262,19 @@ export function GolfRoundForm({ form, onChange }: { form: any; onChange?: () => 
               />
             </div>
             <div className="col-span-2">
-              <label className="block text-xs text-gray-600 mb-1">Putt 数</label>
+              <label className="block text-xs text-gray-600 mb-1">
+                Putt 数
+              </label>
               <input
                 type="number"
                 inputMode="numeric"
                 className="w-full rounded-xl border px-3 py-2"
                 value={h.putts}
                 onChange={(e) => {
-                  const v = Math.max(0, Math.floor(Number(e.target.value || 0)));
+                  const v = Math.max(
+                    0,
+                    Math.floor(Number(e.target.value || 0)),
+                  );
                   const next = holes.slice();
                   next[i] = { ...next[i], putts: v };
                   upsertHoles(next);
@@ -221,14 +282,19 @@ export function GolfRoundForm({ form, onChange }: { form: any; onChange?: () => 
               />
             </div>
             <div className="col-span-2">
-              <label className="block text-xs text-gray-600 mb-1">最大飛距離</label>
+              <label className="block text-xs text-gray-600 mb-1">
+                最大飛距離
+              </label>
               <input
                 type="number"
                 inputMode="numeric"
                 className="w-full rounded-xl border px-3 py-2"
                 value={h.maxDrive}
                 onChange={(e) => {
-                  const v = Math.max(0, Math.floor(Number(e.target.value || 0)));
+                  const v = Math.max(
+                    0,
+                    Math.floor(Number(e.target.value || 0)),
+                  );
                   const next = holes.slice();
                   next[i] = { ...next[i], maxDrive: v };
                   upsertHoles(next);

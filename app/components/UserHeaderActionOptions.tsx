@@ -60,7 +60,6 @@ export default function UserHeaderActionOptions({ user }: { user: User }) {
   };
   return (
     <div className="flex gap-x-2 justify-end items-center py-2 px-4">
-
       {userConnectButton()}
       {userFollowButton()}
       {openTalk()}

@@ -35,7 +35,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const user = await userService.getDetailsById(authed.id);
   const sports = await getSportOptions();
-  
+
   return { user, sports };
 };
 
@@ -103,8 +103,7 @@ export default function MySportSettingsRoute() {
 
   const form = useAppForm({
     defaultValues: {
-      prefSportIds:
-        user.sports?.map((sp) => sp.sportId) ?? [],
+      prefSportIds: user.sports?.map((sp) => sp.sportId) ?? [],
     } as FormValues,
     validators: {
       onSubmit: ({ value }) => {
@@ -138,7 +137,10 @@ export default function MySportSettingsRoute() {
     }
     return sports.filter((s) => {
       return (
-        s.name_en_US.toLowerCase().includes(q) || s.name_ja_JP.toLowerCase().includes(q) || s.alias_ja_JP.toLowerCase().includes(q) || s.alias_en_US.toLowerCase().includes(q)
+        s.name_en_US.toLowerCase().includes(q) ||
+        s.name_ja_JP.toLowerCase().includes(q) ||
+        s.alias_ja_JP.toLowerCase().includes(q) ||
+        s.alias_en_US.toLowerCase().includes(q)
       );
     });
   }, [filter, sports]);
@@ -209,9 +211,7 @@ export default function MySportSettingsRoute() {
               <div className="mb-4">
                 <ul className="flex flex-wrap gap-1">
                   {selectedIds.map((selectedId, indx) => {
-                    const sport = sports.find(
-                      (r) => r.id === selectedId,
-                    );
+                    const sport = sports.find((r) => r.id === selectedId);
                     return (
                       <li key={selectedId} className="flex flex-col items-end">
                         <div className="border border-black rounded px-4 py-2">

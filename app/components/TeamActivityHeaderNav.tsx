@@ -1,4 +1,4 @@
-import type { Team, TeamMember, TeamActivity } from "@prisma/client";
+import type { TeamActivity } from "@prisma/client";
 import { NavLink } from "react-router";
 
 export default function TeamActivityHeaderNav({
@@ -41,8 +41,6 @@ export default function TeamActivityHeaderNav({
             会話
           </NavLink>
         </li>
-
-
 
         {/* TODO: ゲストならDropin参加後に評価できる。仕様決める */}
         {false ? (

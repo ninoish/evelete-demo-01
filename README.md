@@ -1,3 +1,8 @@
+Seed投入
+```
+docker-compose run --rm app sh -c "npx prisma migrate deploy && npx prisma db seed"
+```
+
 # Welcome to React Router!
 
 A modern, production-ready template for building full-stack React applications using React Router.

@@ -107,7 +107,7 @@ export function UserHeader({
               <ul className="flex flex-wrap gap-x-2">
                 {user.sports.map((sp) => {
                   return (
-                     <li key={sp.sportId} className="flex gap-1">
+                    <li key={sp.sportId} className="flex gap-1">
                       <span className="text-sm">{sp.sport.emoji}</span>
                       <span className="text-gray-500 text-sm">
                         {sp.sport.name_ja_JP}
@@ -118,13 +118,13 @@ export function UserHeader({
               </ul>
             </div>
             <div className="flex flex-wrap gap-x-4">
-                <p className="inline-flex text-sm lg:text-base">
-                  {user._count.friendsWith} つながり
-                </p>
-                <p className="inline-flex text-sm lg:text-base">
-                  {user._count.followers} フォロワー
-                </p>
-              </div>
+              <p className="inline-flex text-sm lg:text-base">
+                {user._count.friendsWith} つながり
+              </p>
+              <p className="inline-flex text-sm lg:text-base">
+                {user._count.followers} フォロワー
+              </p>
+            </div>
           </div>
         </div>
         <UserHeaderActionOptions user={user} />

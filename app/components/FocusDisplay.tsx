@@ -12,9 +12,9 @@ export default function FocusDisplay({
 }: {
   userFocuses: Prisma.UserFocusGetPayload<{
     include: {
-      recordMaster: true
+      recordMaster: true;
     };
-  }>[]
+  }>[];
 }) {
   return (
     <div className="py-2">

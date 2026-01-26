@@ -14,20 +14,20 @@ export default function TeamActivityDetailIndexRoute() {
   const { activity, myResponseStatus } = useOutletContext() as {
     activity: Prisma.TeamActivityGetPayload<{
       include: {
-        sport: true,
+        sport: true;
         sportAttributes: {
           include: {
-            sportAttribute: true
-          }
-        }
-      }
+            sportAttribute: true;
+          };
+        };
+      };
     }>;
     myResponseStatus: Awaited<
       ReturnType<typeof teamActivityService.getUserResponse>
     > | null;
   };
 
-  if(!activity) {
+  if (!activity) {
     return null;
   }
 
@@ -52,7 +52,10 @@ export default function TeamActivityDetailIndexRoute() {
       ) : null}
       {activity.name ? <h1>{activity.name}</h1> : null}
 
-      <div>日時: {activity.startDatetime.toISOString()} - {activity.endDatetime?.toISOString() ?? ""}</div>
+      <div>
+        日時: {activity.startDatetime.toISOString()} -{" "}
+        {activity.endDatetime?.toISOString() ?? ""}
+      </div>
 
       {activity.placeName ? (
         <h1 className="flex gap-2">

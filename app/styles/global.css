@@ -1,6 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap");
 
-
 :root {
   --color-foreground: hsl(0, 0%, 8%);
   --color-background: rgb(250, 250, 250);
@@ -14,8 +13,9 @@
     rgb(15, 117, 181) 35%,
     rgb(13, 39, 85) 100%
   );
-  --font-body: -apple-system, "Segoe UI", Helvetica Neue, Helvetica, Roboto,
-    Arial, sans-serif, system-ui, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-body:
+    -apple-system, "Segoe UI", Helvetica Neue, Helvetica, Roboto, Arial,
+    sans-serif, system-ui, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
 html {
@@ -116,8 +116,11 @@ select {
   font-weight: normal;
   line-height: 1.5;
   color: var(--color-foreground);
-  transition: box-shadow 200ms, border-color 50ms ease-out, background-color
-    50ms ease-out, color 50ms ease-out;
+  transition:
+    box-shadow 200ms,
+    border-color 50ms ease-out,
+    background-color 50ms ease-out,
+    color 50ms ease-out;
 }
 
 [type="color"] {
@@ -136,8 +139,11 @@ select {
   font-weight: normal;
   line-height: 1.5;
   color: var(--color-foreground);
-  transition: box-shadow 200ms, border-color 50ms ease-out, background-color
-    50ms ease-out, color 50ms ease-out;
+  transition:
+    box-shadow 200ms,
+    border-color 50ms ease-out,
+    background-color 50ms ease-out,
+    color 50ms ease-out;
 }
 
 [data-light] [type="text"],

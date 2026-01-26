@@ -124,7 +124,6 @@ export default function Index() {
               />
               {/* Desktop向けには、ユーザープロフィールとか所属チームのアップデート通知とか？ */}
             </section>
-
           </>
         ) : null}
         <div className="flex-1 py-2 px-4">
@@ -135,57 +134,112 @@ export default function Index() {
                 <Link to="/me/schedules">すべて見る</Link>
               </div>
               <div>
-                {teamActivities?.length > 0 ? 
-                <ul className="flex flex-col md:flex-row gap-2 md:flex-wrap overflow-x-auto">
-                  {teamActivities.map((ta) => {
-                    const startDatetime = dayjs(ta.startDatetime);
-                    const endDatetime = ta.endDatetime
-                      ? dayjs(ta.endDatetime)
-                      : null;
-                    const timeDisplay = `${startDatetime.format(
-                      "YYYY年MM月DD日 HH:mm",
-                    )} - ${
-                      !endDatetime
-                        ? ""
-                        : startDatetime.isSame(endDatetime, "day")
-                          ? endDatetime.format("HH:mm")
-                          : endDatetime.format("MM月DD日 HH:mm")
-                    }`;
+                {teamActivities?.length > 0 ? (
+                  <ul className="flex flex-col md:flex-row gap-2 md:flex-wrap overflow-x-auto">
+                    {teamActivities.map((ta) => {
+                      const startDatetime = dayjs(ta.startDatetime);
+                      const endDatetime = ta.endDatetime
+                        ? dayjs(ta.endDatetime)
+                        : null;
+                      const timeDisplay = `${startDatetime.format(
+                        "YYYY年MM月DD日 HH:mm",
+                      )} - ${
+                        !endDatetime
+                          ? ""
+                          : startDatetime.isSame(endDatetime, "day")
+                            ? endDatetime.format("HH:mm")
+                            : endDatetime.format("MM月DD日 HH:mm")
+                      }`;
 
-                    const activityTypeDisplay =
-                      teamActivityUtil.convertTypeToDisplay(
-                        ta.teamActivityType,
-                      );
+                      const activityTypeDisplay =
+                        teamActivityUtil.convertTypeToDisplay(
+                          ta.teamActivityType,
+                        );
 
-                    return (
-                      <li
-                        key={ta.id}
-                        className={`w-full md:w-auto p-4 border rounded`}
-                      >
-                        <Link
-                          to={`/teams/activities/${ta.id}`}
-                          className="block"
+                      return (
+                        <li
+                          key={ta.id}
+                          className={`w-full md:w-auto p-4 border rounded`}
                         >
-                          <div className="flex flex-col gap-1">
-                            <div className="inline-flex flex-wrap gap-2">
-                              <span className="rounded border bg-blue-500 text-white py-1 px-2">
-                                {activityTypeDisplay}
-                              </span>
-                              <span>{ta.sport?.name_ja_JP}</span>
-                              {ta.team.imageUrl ? (
-                                <div
-                                  style={{
-                                    backgroundImage: `url(${ta.team.imageUrl})`,
-                                  }}
-                                  className="w-8 h-8 rounded bg-cover bg-center"
-                                />
+                          <Link
+                            to={`/teams/activities/${ta.id}`}
+                            className="block"
+                          >
+                            <div className="flex flex-col gap-1">
+                              <div className="inline-flex flex-wrap gap-2">
+                                <span className="rounded border bg-blue-500 text-white py-1 px-2">
+                                  {activityTypeDisplay}
+                                </span>
+                                <span>{ta.sport?.name_ja_JP}</span>
+                                {ta.team.imageUrl ? (
+                                  <div
+                                    style={{
+                                      backgroundImage: `url(${ta.team.imageUrl})`,
+                                    }}
+                                    className="w-8 h-8 rounded bg-cover bg-center"
+                                  />
+                                ) : null}
+                                <span className="whitespace-nowrap">
+                                  {ta.team.displayName}
+                                </span>
+                              </div>
+                              <div className="inline-flex gap-2">
+                                <span>{ta.name}</span>
+                              </div>
+                              <div className="inline-flex gap-2">
+                                <IoTimeOutline size={12} />
+                                <span className="whitespace-nowrap">
+                                  {timeDisplay}
+                                </span>
+                              </div>
+                              <div className="inline-flex gap-2">
+                                <IoLocationOutline size={12} />
+                                <span className="whitespace-nowrap">
+                                  {ta.place}
+                                </span>
+                              </div>
+                              {user && ta.priceForMember ? (
+                                <div className="inline-flex gap-2">
+                                  <span className="whitespace-nowrap">
+                                    ¥ {ta.priceForMember}
+                                  </span>
+                                </div>
                               ) : null}
-                              <span className="whitespace-nowrap">
-                                {ta.team.displayName}
-                              </span>
                             </div>
+                          </Link>
+                        </li>
+                      );
+                    })}
+
+                    {personalActivities.map((pa) => {
+                      const startDatetime = dayjs(pa.startDatetime);
+                      const endDatetime = pa?.endDatetime
+                        ? dayjs(pa.endDatetime)
+                        : null;
+                      const timeDisplay = `${startDatetime.format(
+                        "YYYY年MM月DD日 HH:mm",
+                      )} - ${
+                        !endDatetime
+                          ? ""
+                          : startDatetime.isSame(endDatetime, "day")
+                            ? endDatetime.format("HH:mm")
+                            : endDatetime.format("MM月DD日 HH:mm")
+                      }`;
+
+                      const activityTypeDisplay =
+                        personalActivityUtil.convertTypeToDisplay(
+                          pa?.activityType[0],
+                        );
+
+                      return (
+                        <li
+                          key={pa.id}
+                          className={`block border rounded py-2 mr-2`}
+                        >
+                          <div className="flex flex-col gap-2">
                             <div className="inline-flex gap-2">
-                              <span>{ta.name}</span>
+                              <span>{activityTypeDisplay}</span>
+                              <span>{pa.name}</span>
                             </div>
                             <div className="inline-flex gap-2">
                               <IoTimeOutline size={12} />
@@ -196,70 +250,19 @@ export default function Index() {
                             <div className="inline-flex gap-2">
                               <IoLocationOutline size={12} />
                               <span className="whitespace-nowrap">
-                                {ta.place}
+                                {pa?.place}
                               </span>
                             </div>
-                            {user && ta.priceForMember ? (
-                              <div className="inline-flex gap-2">
-                                <span className="whitespace-nowrap">
-                                  ¥ {ta.priceForMember}
-                                </span>
-                              </div>
-                            ) : null}
                           </div>
-                        </Link>
-                      </li>
-                    );
-                  })}
-
-                  {personalActivities.map((pa) => {
-                    const startDatetime = dayjs(pa.startDatetime);
-                    const endDatetime = pa?.endDatetime
-                      ? dayjs(pa.endDatetime)
-                      : null;
-                    const timeDisplay = `${startDatetime.format(
-                      "YYYY年MM月DD日 HH:mm",
-                    )} - ${
-                      !endDatetime
-                        ? ""
-                        : startDatetime.isSame(endDatetime, "day")
-                          ? endDatetime.format("HH:mm")
-                          : endDatetime.format("MM月DD日 HH:mm")
-                    }`;
-
-                    const activityTypeDisplay =
-                      personalActivityUtil.convertTypeToDisplay(
-                        pa?.activityType[0],
+                        </li>
                       );
-
-                    return (
-                      <li
-                        key={pa.id}
-                        className={`block border rounded py-2 mr-2`}
-                      >
-                        <div className="flex flex-col gap-2">
-                          <div className="inline-flex gap-2">
-                            <span>{activityTypeDisplay}</span>
-                            <span>{pa.name}</span>
-                          </div>
-                          <div className="inline-flex gap-2">
-                            <IoTimeOutline size={12} />
-                            <span className="whitespace-nowrap">
-                              {timeDisplay}
-                            </span>
-                          </div>
-                          <div className="inline-flex gap-2">
-                            <IoLocationOutline size={12} />
-                            <span className="whitespace-nowrap">
-                              {pa?.place}
-                            </span>
-                          </div>
-                        </div>
-                      </li>
-                    );
-                  }) ?? null}
-                </ul>
-                : <div className="text-gray-400 p-4 text-center">予定はありません</div>}
+                    }) ?? null}
+                  </ul>
+                ) : (
+                  <div className="text-gray-400 p-4 text-center">
+                    予定はありません
+                  </div>
+                )}
               </div>
             </section>
           ) : null}

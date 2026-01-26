@@ -205,7 +205,13 @@ const WelcomeMeasurementPage = () => {
     <div className="max-h-screen flex flex-col">
       <header className="border-b pb-2 mb-2 flex flex-col md:flex-row md:items-center md:justify-between">
         <div className="relative w-full flex justify-center items-center py-3 text-gray-700">
-          <button type="button" className="absolute left-4 top-3"  onClick={() => {history.back();}}>
+          <button
+            type="button"
+            className="absolute left-4 top-3"
+            onClick={() => {
+              history.back();
+            }}
+          >
             <span className="text-xl">←</span>
           </button>
           <h1 className="text-lg text-center">
